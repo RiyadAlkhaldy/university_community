@@ -41,7 +41,7 @@ dependencies:
   flutter_bloc: ^8.1.1
   get_it: ^7.2.0
   internet_connection_checker: ^1.0.0+1
-  http: ^0.13.5
+  # http: ^0.13.5
   equatable: ^2.0.5
   dartz: ^0.10.1
   animated_theme_switcher: ^2.0.7
@@ -63,6 +63,7 @@ dependencies:
   flutter_downloader: ^1.10.1
   device_info_plus: ^8.0.0
   sqflite: ^2.2.3
+  http: ^0.13.5
   # flutter_settings_screens: ^0.3.3-null-safety+2
 
 
@@ -103,6 +104,8 @@ flutter:
     - assets/images/user2.png
     - assets/images/user3.png
     - assets/images/user4.png
+    - assets/images/login.png
+    - assets/images/register.png
     - assets/logo.png
 
   fonts:

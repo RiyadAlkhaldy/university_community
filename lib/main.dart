@@ -3,6 +3,7 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:untitled/core/theme/theme_data/theme_data_dark.dart';
+import 'package:untitled/features/auth/screens/signup.dart';
 import 'package:untitled/features/setting/screens/header_setting_screen.dart';
 import 'package:untitled/features/setting/screens/setting_screen.dart';
 import 'package:untitled/features/user/presentation/layout/buttom_navigation_bar.dart';
@@ -56,7 +57,7 @@ class _MyAppState extends State<MyApp> {
               title: 'Flutter Demo',
               theme: isDarkMode ? MyThemes.darkTheme : MyThemes.lightTheme,
               // home: SettingScreen(),
-              home: MobileLayoutScreen(),
+              home: SignUp(),
             ));
   }
 }

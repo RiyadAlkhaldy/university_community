@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/core/error/error.dart';
+import 'package:untitled/features/auth/screens/login.dart';
+import 'package:untitled/features/auth/screens/signup.dart';
 import 'package:untitled/features/user/presentation/pages/user_profile_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
@@ -7,6 +9,14 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case UserProfileScreen.routeName:
       return MaterialPageRoute(
         builder: (context) => UserProfileScreen(),
+      );
+      case Login.routeName:
+      return MaterialPageRoute(
+        builder: (context) => Login(),
+      );
+      case SignUp.routeName:
+      return MaterialPageRoute(
+        builder: (context) => SignUp(),
       );
 
     // case MobileChatScreen.routeName:
