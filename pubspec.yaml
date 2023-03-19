@@ -63,6 +63,7 @@ dependencies:
   flutter_downloader: ^1.10.1
   device_info_plus: ^8.0.0
   sqflite: ^2.2.3
+  dio: ^5.0.3
   # flutter_settings_screens: ^0.3.3-null-safety+2
 
 
