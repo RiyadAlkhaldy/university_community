@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/core/error/error.dart';
+import 'package:untitled/features/auth/Screens/student_register.dart';
+import 'package:untitled/features/auth/screens/login.dart';
 import 'package:untitled/features/user/presentation/pages/user_profile_screen.dart';
+import 'package:untitled/mobile_layout_screen.dart';
+
+import 'features/auth/Screens/registration.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -8,7 +13,22 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         builder: (context) => UserProfileScreen(),
       );
-
+    case Login.routeName:
+      return MaterialPageRoute(
+        builder: (context) => Login(),
+      );
+    case Registration.routeName:
+      return MaterialPageRoute(
+        builder: (context) => Registration(),
+      );
+    case StudentRegister.routeName:
+      return MaterialPageRoute(
+        builder: (context) => StudentRegister(),
+      );
+    case MobileLayoutScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => MobileLayoutScreen(),
+      );
     // case MobileChatScreen.routeName:
     //   final arguments = settings.arguments as Map<String, dynamic>;
     //   final name = arguments['name'];

@@ -13,17 +13,18 @@ import 'features/video/orientation/portrait_player_widget.dart';
 import 'features/video/orientation/video_player_both_widget.dart';
 
 class MobileLayoutScreen extends StatefulWidget {
+  static const String routeName = 'moile-layout-screen';
+
   @override
   _MobileLayoutScreenState createState() => _MobileLayoutScreenState();
 }
 
-int currentIndex = 4;
+int currentIndex = 2;
 
 class _MobileLayoutScreenState extends State<MobileLayoutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Color(0xFFEDF0F6),
       body: currentIndex == 0
           ? SettingScreen()
           : currentIndex == 1
