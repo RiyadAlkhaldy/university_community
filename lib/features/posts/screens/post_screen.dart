@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:untitled/core/utils/loader.dart';
-import 'package:untitled/features/posts/models/post_model.dart';
-import 'package:untitled/features/posts/screens/view_post_screen.dart';
 import 'package:untitled/features/posts/widgets/build_post.dart';
-import 'package:untitled/features/setting/screens/setting_screen.dart';
-import 'package:untitled/features/user/presentation/pages/user_profile_screen.dart';
 
-class PostScreen extends StatelessWidget {
+import '../controller/posts_controlller.dart';
+import '../models/post_model.dart';
+
+class PostScreen extends ConsumerWidget {
   const PostScreen({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    
+
     return CustomScrollView(
       slivers: [
         SliverOverlapInjector(
@@ -25,82 +26,54 @@ class PostScreen extends StatelessWidget {
             Container(
               width: double.infinity,
               height: 100.0,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: stories.length + 1,
-                itemBuilder: (BuildContext context, int index) {
-                  if (index == 0) {
-                    return SizedBox(width: 10.0);
-                  }
-                  return Container(
-                    margin: EdgeInsets.all(10.0),
-                    width: 60.0,
-                    height: 60.0,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black45,
-                          offset: Offset(0, 2),
-                          blurRadius: 6.0,
-                        ),
-                      ],
-                    ),
-                    child: CircleAvatar(
-                      child: ClipOval(
-                        child: Image(
-                          height: 60.0,
-                          width: 60.0,
-                          image: AssetImage(stories[index - 1]),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            // pos.when(
-            //   data: (data) => Column(
-            //       children: data
-            //           .map((e) => buildPost(
-            //                 index: 0,
-            //                 contextl: context,
-            //                 post: e,
-            //               ))
-            //           .toList()
+              child: ListView(
+                  scrollDirection: Axis.horizontal, children: [NewWidget()]),
+            ), //
+             ref.watch(getAllPostsProvider).when(
 
-            //       // childCount: data.length,
-            //       ),
-            //   error: (error, stackTrace) => Text("error"),
-            //   loading: () => const Loader(),
-            // ),
-            Consumer(
-              builder: (context, ref, child) {
-                final pos = ref.watch(posts);
-                return pos.when(
-                  data: (data) => Column(
-                      children: data
-                          .map((e) => buildPost(
-                                index: 0,
-                                contextl: context,
-                                post: e,
-                              ))
-                          .toList()
+              data: (data) {
+                
+                // print('length of the data ${data.length}');
+                return Column(
+                    children: data
+                        .map((p) => buildPost(
+                              index: 0,
+                              contextl: context,
+                              post: p,
+                            ))
+                        .toList()
 
-                      // childCount: data.length,
-                      ),
-                  error: (error, stackTrace) => Text("error"),
-                  loading: () => const Loader(),
-                );
+                    // childCount: data.length,
+                    );
               },
+              error: (error, stackTrace) => Center(
+                child: Text(error.toString()),
+              ),
+              loading: () => Loader(),
             ),
-            // buildPost(index: 0, contextl: context),
-            // buildPost(index: 1, contextl: context),
-            // buildPost(index: 0, contextl: context),
 
-            // buildPost(index: 1, contextl: context),
-            // buildPost(index: 0, contextl: context),
+            
+            // Consumer(
+            //   builder: (context, ref, child) {
+            //     final pos = ref.watch(getAllPostsProvider);
+            //     return pos.when(
+            //       data: (data) => Column(
+            //           children: data
+            //               .map((p) => buildPost(
+            //                     index: 0,
+            //                     contextl: context,
+            //                     post: p,
+            //                   ))
+            //               .toList()
+
+            //           // childCount: data.length,
+            //           ),
+            //       error: (error, stackTrace) => Text("error"),
+            //       loading: () => const Loader(),
+            //     );
+            //   },
+            // ),
+           
           ]),
 
           // ],
@@ -141,6 +114,41 @@ class PostScreen extends StatelessWidget {
             ],
           )
         ],
+      ),
+    );
+  }
+}
+
+class NewWidget extends StatelessWidget {
+  const NewWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(10.0),
+      width: 60.0,
+      height: 60.0,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black45,
+            offset: Offset(0, 2),
+            blurRadius: 6.0,
+          ),
+        ],
+      ),
+      child: CircleAvatar(
+        child: ClipOval(
+          child: Image(
+            height: 60.0,
+            width: 60.0,
+            image: AssetImage(stories[1]),
+            fit: BoxFit.cover,
+          ),
+        ),
       ),
     );
   }

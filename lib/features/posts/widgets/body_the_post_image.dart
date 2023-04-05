@@ -6,7 +6,7 @@ import 'package:untitled/features/posts/models/post_model.dart';
 import '../screens/view_post_screen.dart';
 
 class BodyThePostImage extends StatelessWidget {
-  final Post post;
+  final Posts post;
   final int index;
   BodyThePostImage({
     Key? key,
@@ -42,7 +42,7 @@ class BodyThePostImage extends StatelessWidget {
             ),
           ],
           image: DecorationImage(
-            image: AssetImage(post.imageUrl),
+            image: NetworkImage(post.url!),
             fit: BoxFit.fitWidth,
           ),
         ),

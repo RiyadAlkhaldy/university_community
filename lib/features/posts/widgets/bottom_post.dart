@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/post_model.dart';
 import '../screens/view_post_screen.dart';
 
-Widget BottomPost(BuildContext context, int index) {
+Widget BottomPost(BuildContext context, Posts post) {
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: 20.0),
     child: Row(
@@ -38,7 +38,7 @@ Widget BottomPost(BuildContext context, int index) {
                       context,
                       MaterialPageRoute(
                         builder: (_) => ViewPostScreen(
-                          post: postss[index],
+                          post: post,
                         ),
                       ),
                     );

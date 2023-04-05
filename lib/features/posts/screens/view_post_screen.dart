@@ -6,8 +6,8 @@ import 'package:untitled/features/video/orientation/portrait_landscape_player_pa
 import 'package:untitled/features/video/orientation/portrait_player_widget.dart';
 
 class ViewPostScreen extends StatelessWidget {
-  static const String = "view-post-screen";
-  final Post post;
+  static const String routeName = "view-post-screen";
+  final Posts post;
 
   ViewPostScreen({required this.post});
 
@@ -81,8 +81,8 @@ class ViewPostScreen extends StatelessWidget {
                       children: <Widget>[
                         //! view header the post
                         HeaderViewPostScreen(post: post),
-                        if (post.type == 0) ContentViewPostScreen(post: post),
-                        if (post.type == 1)
+                        if (post.type == 2) ContentViewPostScreen(post: post),
+                        if (post.type == 3)
                           LimitedBox(
                               maxWidth: double.infinity,
                               maxHeight: 400,
@@ -91,7 +91,7 @@ class ViewPostScreen extends StatelessWidget {
                                 index: 1,
                               )),
 
-                        BottomPost(context, 0),
+                        BottomPost(context, post),
                       ],
                     ),
                   ),
@@ -176,7 +176,7 @@ class ViewPostScreen extends StatelessWidget {
                       child: Image(
                         height: 48.0,
                         width: 48.0,
-                        image: AssetImage(post.authorImageUrl),
+                        image: NetworkImage(post.url!),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -213,7 +213,7 @@ class ContentViewPostScreen extends StatelessWidget {
     required this.post,
   });
 
-  final Post post;
+  final Posts post;
 
   @override
   Widget build(BuildContext context) {
@@ -233,7 +233,7 @@ class ContentViewPostScreen extends StatelessWidget {
             ),
           ],
           image: DecorationImage(
-            image: AssetImage(post.imageUrl),
+            image: NetworkImage(post.url!),
             fit: BoxFit.fitWidth,
           ),
         ),
@@ -248,7 +248,7 @@ class HeaderViewPostScreen extends StatelessWidget {
     required this.post,
   });
 
-  final Post post;
+  final Posts post;
 
   @override
   Widget build(BuildContext context) {
@@ -282,19 +282,19 @@ class HeaderViewPostScreen extends StatelessWidget {
                   child: Image(
                     height: 50.0,
                     width: 50.0,
-                    image: AssetImage(post.authorImageUrl),
+                    image: NetworkImage(post.content!),
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
             ),
             title: Text(
-              post.authorName,
+              post.content!,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
-            subtitle: Text(post.timeAgo),
+            subtitle: Text(post.content!),
             trailing: IconButton(
               onPressed: () {
                 showDialog(

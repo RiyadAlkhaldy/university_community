@@ -7,7 +7,7 @@ import '../screens/view_post_screen.dart';
 
 class BodyThePostVideo extends StatelessWidget {
   final int index;
-  final Post? post;
+  final Posts? post;
   const BodyThePostVideo({
     Key? key,
     required this.index,
@@ -17,9 +17,9 @@ class BodyThePostVideo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: () => print('Like post'),
+        // onTap: () => print('Like post'),
         // onTap: () => print("push video"),
-        onDoubleTap: () {
+        onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(

@@ -9,7 +9,7 @@ import 'package:untitled/features/video/orientation/video_player_both_widget.dar
 
 class PortraitLandscapePlayerPage extends StatefulWidget {
   final int index;
-  final Post? post;
+  final Posts? post;
   const PortraitLandscapePlayerPage({
     Key? key,
     required this.index,
@@ -29,7 +29,7 @@ class _PortraitLandscapePlayerPageState
   void initState() {
     super.initState();
 
-    controller = VideoPlayerController.network(widget.post!.videoUrl)
+    controller = VideoPlayerController.network(widget.post!.url!)
       ..addListener(() => setState(() {}))
       ..setLooping(true)
       ..initialize().then((_) => controller.pause());

@@ -1,4 +1,9 @@
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:untitled/features/posts/screens/upload_file_screen.dart';
+import 'package:untitled/features/posts/screens/upload_text_screen%20copy.dart';
+import 'package:untitled/res/widgets/show_modal_bottom_sheet_post.dart';
 
 class BottomNavigationBarr extends StatelessWidget {
   Function(int)? onTap;
@@ -44,12 +49,15 @@ class BottomNavigationBarr extends StatelessWidget {
             icon: Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.0),
               child: MaterialButton(
-                // padding: EdgeInsets.symmetric(vertical: 5.0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.0),
                 ),
                 color: Color(0xFF23B66F),
-                onPressed: () => print('Upload photo'),
+                onPressed: () {
+                  if (kDebugMode) print('Upload photo');
+
+                  showModalBottomSheetCustom(context);
+                },
                 child: Icon(
                   Icons.add,
                   size: 25.0,
@@ -57,7 +65,7 @@ class BottomNavigationBarr extends StatelessWidget {
                 ),
               ),
             ),
-            label: 'lebel',
+            label: '',
           ),
           BottomNavigationBarItem(
             icon: Icon(
@@ -79,4 +87,66 @@ class BottomNavigationBarr extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<dynamic> showModalBottomSheetCustom(BuildContext context) {
+  return showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      barrierColor: Colors.transparent,
+      context: context,
+      builder: (_) {
+        return Container(
+          height: 250,
+          decoration: BoxDecoration(
+              color: const Color(0xFF2e3253).withOpacity(0.4),
+              borderRadius: const BorderRadius.only(
+                  topRight: Radius.circular(20), topLeft: Radius.circular(20))),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ButtonWidget(
+                  backgroundcolor: Colors.blue,
+                  // AppColors.mainColor,
+                  text: "Video",
+                  textColor: Colors.white,
+                  onTap: () {
+                    Navigator.pushNamed(context, UploadFileScreen.routeName,
+                        arguments: {"type": FileType.video});
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                ButtonWidget(
+                  backgroundcolor: Colors.blue,
+                  // AppColors.mainColor,
+                  text: "Photo",
+                  textColor: Colors.white,
+                  onTap: () {
+                    Navigator.pushNamed(context, UploadFileScreen.routeName,
+                        arguments: {"type": FileType.image});
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                ButtonWidget(
+                  backgroundcolor: Colors.blue,
+                  // AppColors.mainColor,
+                  text: "text",
+                  textColor: Colors.white,
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      UploadTextScreen.routeName,
+                    );
+                  },
+                )
+              ],
+            ),
+          ),
+        );
+      });
 }

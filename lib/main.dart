@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/core/theme/theme_data/theme_data_dark.dart';
 // import 'package:untitled/features/auth/screens/signup.dart';
 import 'package:untitled/features/setting/screens/header_setting_screen.dart';
-import 'package:untitled/features/setting/screens/setting_screen.dart';
-import 'package:untitled/features/user/presentation/layout/buttom_navigation_bar.dart';
 import 'package:untitled/mobile_layout_screen.dart';
 import 'package:untitled/route.dart';
 // import 'package:untitled/features/user/presentation/pages/user_profile_screen.dart';
 import 'package:untitled/themes.dart';
 
 import 'features/auth/Screens/launch.dart';
-import 'features/auth/Screens/student_register.dart';
-import 'features/auth/Screens/admin_register.dart';
 import 'features/auth/controller/auth_controller.dart';
 
 // 563492ad6f917000010000013d24e4038ca942559b31b58c298d1c40
@@ -41,18 +35,19 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final isDarkModes = Settings.getValue<bool>(HeaderSettingScreen.keyDarkMode,
       defaultValue: true);
-  //
-  // final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-  // late SharedPreferences prefs;
   String? token = null;
   bool initial = true;
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
+    // print('initial =================== $initial');
+
     if (initial == true) {
       SharedPreferences.getInstance().then((value) {
         setState(() {
+         //!this for clear all dara in SharedPreferences .
           // value.clear();
           token = value.getString('token');
           initial = false;

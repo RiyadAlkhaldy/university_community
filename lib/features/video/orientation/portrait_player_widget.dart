@@ -1,4 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -7,10 +10,15 @@ import 'package:untitled/features/video/orientation/video_player_fullscreen_widg
 import 'package:untitled/features/video/screens/basics/network_player_widget.dart';
 
 class PortraitPlayerWidget extends StatefulWidget {
-  final Post? post;
+  final Posts? post;
+  final FileType? type;
+  final File? file;
+
   PortraitPlayerWidget({
     Key? key,
     this.post,
+    this.type,
+    this.file,
   }) : super(key: key);
 
   @override
@@ -25,8 +33,8 @@ class _PortraitPlayerWidgetState extends State<PortraitPlayerWidget> {
   void initState() {
     super.initState();
 
-    /// for testing purposes: 'https://firebasestorage.googleapis.com/v0/b/web-johannesmilke.appspot.com/o/ezgif-7-565b5237f95f.mp4?alt=media&token=51e8e031-1e87-46e6-bd32-98c5367da59d'
-    controller = VideoPlayerController.network(widget.post!.videoUrl)
+   
+    controller =   VideoPlayerController.network(widget.post!.url!)
       ..addListener(() => setState(() {}))
       ..setLooping(true)
       ..initialize().then((_) => controller.pause());
@@ -40,20 +48,20 @@ class _PortraitPlayerWidgetState extends State<PortraitPlayerWidget> {
 
   @override
   Widget build(BuildContext context) => Container(
-    // height: controller.value.size.height,
-    height: double.infinity,
-    child: VideoPlayerFullscreenWidget(controller: controller),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(25.0),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black45,
-          offset: Offset(0, 5),
-          blurRadius: 8.0,
+        // height: controller.value.size.height,
+        height: double.infinity,
+        child: VideoPlayerFullscreenWidget(controller: controller),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black45,
+              offset: Offset(0, 5),
+              blurRadius: 8.0,
+            ),
+          ],
         ),
-      ],
-    ),
-    // margin: EdgeInsets.all(10.0),
-    width: double.infinity,
-  );
+        // margin: EdgeInsets.all(10.0),
+        width: double.infinity,
+      );
 }

@@ -1,7 +1,10 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled/core/error/error.dart';
 import 'package:untitled/features/auth/Screens/student_register.dart';
 import 'package:untitled/features/auth/screens/login.dart';
+import 'package:untitled/features/posts/screens/upload_file_screen.dart';
+import 'package:untitled/features/posts/screens/upload_text_screen%20copy.dart';
 import 'package:untitled/features/user/presentation/pages/user_profile_screen.dart';
 import 'package:untitled/mobile_layout_screen.dart';
 
@@ -28,6 +31,16 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case MobileLayoutScreen.routeName:
       return MaterialPageRoute(
         builder: (context) => MobileLayoutScreen(),
+      );
+    case UploadFileScreen.routeName:
+      final arguments = settings.arguments as Map<String, dynamic>;
+      final type = arguments['type'] as FileType;
+      return MaterialPageRoute(
+        builder: (context) => UploadFileScreen(type: type),
+      );
+    case UploadTextScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => UploadTextScreen(),
       );
     // case MobileChatScreen.routeName:
     //   final arguments = settings.arguments as Map<String, dynamic>;

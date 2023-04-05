@@ -29,7 +29,7 @@ class _StudentRegisterState extends ConsumerState<StudentRegister> {
       print('auth');
       isGoing = true;
 
-      ref.read(authControllerProvider).register(
+      ref.watch(authControllerProvider.notifier).state.register(
           email: emailController.text.trim(),
           uniId: univIdController.text.trim(),
           IDNumber: IDNUmber.text.trim(),

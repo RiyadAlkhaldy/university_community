@@ -2,19 +2,15 @@
 import 'package:flutter/material.dart';
 
 import 'package:untitled/features/posts/models/post_model.dart';
-import 'package:untitled/features/posts/screens/view_post_screen.dart';
-import 'package:untitled/features/posts/widgets/body_the_post_video.dart';
 
 import 'body_the_post_image.dart';
+import 'body_the_post_text.dart';
+import 'body_the_post_video.dart';
 import 'bottom_post.dart';
-
-// Widget buildPost(int index, BuildContext context) {
-//   return NewWidget();
-// }
 
 class buildPost extends StatelessWidget {
   final int index;
-  final Post? post;
+  final Posts? post;
   BuildContext contextl;
   buildPost({
     Key? key,
@@ -25,6 +21,7 @@ class buildPost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // print('post =     ${post!.url}');
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
       child: Container(
@@ -42,16 +39,22 @@ class buildPost extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   //! Header The Post Widget
-                  HeaderThePost(index: index),
+                  if (post!.type == 2 && post!.url != null)
+                    HeaderThePost(
+                      index: index,
+                      post: post!,
+                    ),
 
-                  if (post!.type == 0)
+                  if (post!.type == 2 && post!.url != null)
                     BodyThePostImage(index: index, post: post!),
-                  if (post!.type == 1)
+                  if (post!.type == 3 && post!.url != null)
                     BodyThePostVideo(
                       index: index,
                       post: post,
                     ),
-                  BottomPost(context, index),
+                  if (post!.type == 1 && post!.url == null)
+                  BodyThePostText(index: 1,post: post!,),
+                    BottomPost(context, post!),
                 ],
               ),
             ),
@@ -64,14 +67,17 @@ class buildPost extends StatelessWidget {
 
 class HeaderThePost extends StatelessWidget {
   final int index;
+  final Posts post;
   const HeaderThePost({
     Key? key,
     required this.index,
+    required this.post,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      // tileColor: Colors.grey,
       leading: Container(
         width: 50.0,
         height: 50.0,
@@ -90,19 +96,20 @@ class HeaderThePost extends StatelessWidget {
             child: Image(
               height: 50.0,
               width: 50.0,
-              image: AssetImage(postss[index].authorImageUrl),
+              image: NetworkImage(post.url!),
               fit: BoxFit.cover,
             ),
           ),
         ),
       ),
       title: Text(
-        postss[index].authorName,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
+        post.name,
+        style: Theme.of(context)
+            .textTheme
+            .headlineSmall!
+            .copyWith(fontSize: 20, color: Colors.black),
       ),
-      subtitle: Text(postss[index].timeAgo),
+      subtitle: Text(post.content!),
       trailing: IconButton(
         onPressed: () {
           showDialog(

@@ -31,6 +31,9 @@ class User {
   User({
     required this.name,
     required this.email,
+    required this.collogeId,
+    required this.sectionId,
+    required this.universityId,
     required this.idNumber,
     required this.updatedAt,
     required this.createdAt,
@@ -38,6 +41,9 @@ class User {
   });
   late final String name;
   late final String email;
+  late final int collogeId;
+  late final int sectionId;
+  late final String universityId;
   late final String idNumber;
   late final String updatedAt;
   late final String createdAt;
@@ -46,6 +52,9 @@ class User {
   User.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     email = json['email'];
+    collogeId = json['colloge_id'];
+    sectionId = json['section_id'];
+    universityId = json['university_id'];
     idNumber = json['id_number'];
     updatedAt = json['updated_at'];
     createdAt = json['created_at'];
@@ -56,6 +65,9 @@ class User {
     final _data = <String, dynamic>{};
     _data['name'] = name;
     _data['email'] = email;
+    _data['colloge_id'] = collogeId;
+    _data['section_id'] = sectionId;
+    _data['university_id'] = universityId;
     _data['id_number'] = idNumber;
     _data['updated_at'] = updatedAt;
     _data['created_at'] = createdAt;

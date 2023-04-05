@@ -38,7 +38,6 @@ dependencies:
   cupertino_icons: ^1.0.2
   image_picker: ^0.8.6
   cached_network_image: ^3.2.3
-  flutter_bloc: ^8.1.1
   get_it: ^7.2.0
   internet_connection_checker: ^1.0.0+1
   # http: ^0.13.5
@@ -57,16 +56,24 @@ dependencies:
   auto_orientation: ^2.2.1
   native_device_orientation: ^1.1.4
   shared_preferences: ^2.0.20
-  flutter_launcher_icons: ^0.11.0
+  flutter_launcher_icons: ^0.12.0
   permission_handler: ^10.2.0
   path_provider_android: ^2.0.22
   flutter_downloader: ^1.10.1
   device_info_plus: ^8.0.0
   sqflite: ^2.2.3
-  dio: ^5.0.3
+  dio: ^4.0.6
   web_socket_channel: ^2.3.0
   flutter_keyboard_visibility: ^5.4.0
   fluttertoast: ^8.2.1
+  chunked_uploader: ^1.0.0
+  # open_file: ^2.1.1
+  font_awesome_flutter: ^10.4.0
+  community_material_icon: ^5.9.55
+  circular_reveal_animation: ^2.0.1
+  # ffi: ^2.0.1
+  # open_file: ^3.1.1
+  # apivideouploader: ^0.0.2
 # <<<<<<< HEAD
 # =======
 # >>>>>>> 7f886d21bd061a77055349a6064f68f8ec78261e
