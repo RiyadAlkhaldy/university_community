@@ -1,8 +1,7 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:untitled/features/posts/models/post_model.dart';
-
+import '../repository/repository_posts.dart';
 import 'body_the_post_image.dart';
 import 'body_the_post_text.dart';
 import 'body_the_post_video.dart';
@@ -39,22 +38,25 @@ class buildPost extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   //! Header The Post Widget
-                  if (post!.type == 2 && post!.url != null)
-                    HeaderThePost(
-                      index: index,
-                      post: post!,
-                    ),
+                  // if (post!.type ==)
+                  HeaderThePost(
+                    index: index,
+                    post: post!,
+                  ),
 
-                  if (post!.type == 2 && post!.url != null)
+                  if (post!.type == 2)
                     BodyThePostImage(index: index, post: post!),
-                  if (post!.type == 3 && post!.url != null)
+                  if (post!.type == 3)
                     BodyThePostVideo(
                       index: index,
                       post: post,
                     ),
-                  if (post!.type == 1 && post!.url == null)
-                  BodyThePostText(index: 1,post: post!,),
-                    BottomPost(context, post!),
+                  if (post!.type == 1)
+                    BodyThePostText(
+                      index: 1,
+                      post: post!,
+                    ),
+                  BottomPost(context, post!),
                 ],
               ),
             ),
@@ -65,17 +67,17 @@ class buildPost extends StatelessWidget {
   }
 }
 
-class HeaderThePost extends StatelessWidget {
+class HeaderThePost extends ConsumerWidget {
   final int index;
   final Posts post;
-  const HeaderThePost({
+  HeaderThePost({
     Key? key,
     required this.index,
     required this.post,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
       // tileColor: Colors.grey,
       leading: Container(
@@ -93,12 +95,14 @@ class HeaderThePost extends StatelessWidget {
         ),
         child: CircleAvatar(
           child: ClipOval(
-            child: Image(
-              height: 50.0,
-              width: 50.0,
-              image: NetworkImage(post.url!),
-              fit: BoxFit.cover,
-            ),
+            child: post.url == null
+                ? Image.asset('assets/images/user0.png')
+                : Image(
+                    height: 50.0,
+                    width: 50.0,
+                    image: NetworkImage(post.url!),
+                    fit: BoxFit.cover,
+                  ),
           ),
         ),
       ),
@@ -109,7 +113,7 @@ class HeaderThePost extends StatelessWidget {
             .headlineSmall!
             .copyWith(fontSize: 20, color: Colors.black),
       ),
-      subtitle: Text(post.content!),
+      subtitle: Text(post.content),
       trailing: IconButton(
         onPressed: () {
           showDialog(
@@ -139,11 +143,9 @@ class HeaderThePost extends StatelessWidget {
                                 child: Text(e),
                               ),
                               onTap: () {
-                                // deletePost(
-                                //   widget.snap['postId']
-                                //       .toString(),
-                                // );
-                                // remove the dialog box
+                                ref
+                                    .read(postsProvider.notifier)
+                                    .deletePost(post.id);
                                 Navigator.of(context).pop();
                               }),
                         )

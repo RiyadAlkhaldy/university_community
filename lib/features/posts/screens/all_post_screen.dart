@@ -5,33 +5,44 @@ import 'package:untitled/features/posts/widgets/build_post.dart';
 
 // import '../controller/posts_controlller.dart';
 import '../models/post_model.dart';
-import '../repository/repository_post.dart';
+import '../repository/repository_posts.dart';
 
-class PostScreen extends ConsumerStatefulWidget {
-  PostScreen({
+class AllPostScreen extends ConsumerStatefulWidget {
+  AllPostScreen({
     super.key,
   });
 
   @override
-  ConsumerState<PostScreen> createState() => _PostScreenState();
+  ConsumerState<AllPostScreen> createState() => _PostScreenState();
 }
 
 var checkposts;
 
-class _PostScreenState extends ConsumerState<PostScreen> {
-  @override
-  void initState() async {
-    await ref.read(responseProvider.notifier).getAllPosts;
-    final p = ref.read(responseProvider.notifier).state.posts;
-    print(p);
+class _PostScreenState extends ConsumerState<AllPostScreen> {
+  // @override
+  // void initState() async {
+  //   // await ref.read(postsProvider.notifier).getAllPosts;
+  //   // final p = ref.read(postsProvider.notifier).state;
+  //   // print(p);
 
-    super.initState();
-  }
+  //   super.initState();
+  // }
+
+  bool dataLoaded = false;
+  bool inital = true;
 
   @override
   Widget build(BuildContext context) {
-    final posts = ref.watch(responseProvider);
-    final postss = ref.watch(AllPostsProvider);
+    // final posts =
+    if (inital == true) {
+      ref.watch(postsProvider.notifier).getAllPosts.then((value) {
+        setState(() {
+          dataLoaded = true;
+          inital = false;
+        });
+      });
+    }
+    // final postss = ref.watch(postsProvider);
 
     return CustomScrollView(
       slivers: [
@@ -48,11 +59,11 @@ class _PostScreenState extends ConsumerState<PostScreen> {
                   scrollDirection: Axis.horizontal, children: [NewWidget()]),
             ), //
             // ref.watch(getAllPostsProvider).when(
-            postss.when(
-              data: (data) {
-                // print('length of the data ${data.length}');
-                return Column(
-                    children: posts.posts
+            // for(var post in postss)
+            dataLoaded == true
+                ? Column(
+                    children: ref
+                        .watch(postsProvider)
                         .map((p) => buildPost(
                               index: 0,
                               contextl: context,
@@ -61,13 +72,28 @@ class _PostScreenState extends ConsumerState<PostScreen> {
                         .toList()
 
                     // childCount: data.length,
-                    );
-              },
-              error: (error, stackTrace) => Center(
-                child: Text(error.toString()),
-              ),
-              loading: () => Loader(),
-            ),
+                    )
+                : Loader(),
+            // postss.when(
+            //   data: (data) {
+            //     // print('length of the data ${data.length}');
+            //     return Column(
+            //         children: data
+            //             .map((p) => buildPost(
+            //                   index: 0,
+            //                   contextl: context,
+            //                   post: p,
+            //                 ))
+            //             .toList()
+
+            //         // childCount: data.length,
+            //         );
+            //   },
+            //   error: (error, stackTrace) => Center(
+            //     child: Text(error.toString()),
+            //   ),
+            //   loading: () => Loader(),
+            // ),
 
             // Consumer(
             //   builder: (context, ref, child) {

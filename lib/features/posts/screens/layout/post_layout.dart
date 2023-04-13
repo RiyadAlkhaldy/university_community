@@ -5,10 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:untitled/core/utils/colors.dart';
 import 'package:untitled/core/utils/utils.dart';
 import 'package:untitled/features/posts/screens/post_screen.dart';
-import 'package:untitled/features/user/presentation/pages/user_profile_screen.dart';
+
+import '../all_post_screen.dart';
 
 class PostLayout extends ConsumerStatefulWidget {
-  const PostLayout({Key? key}) : super(key: key);
+  PostLayout({Key? key}) : super(key: key);
 
   @override
   ConsumerState<PostLayout> createState() => _MobileLayoutScreenState();
@@ -56,8 +57,8 @@ class _MobileLayoutScreenState extends ConsumerState<PostLayout>
           ],
           body: TabBarView(
             controller: tabBarController,
-            children: const [
-              PostScreen(),
+            children: [
+              AllPostScreen(),
               PostScreen(),
               PostScreen(),
             ],
@@ -128,7 +129,7 @@ class _MobileLayoutScreenState extends ConsumerState<PostLayout>
 
 //! floating Action Button Widget
 class FloatingActionButtonWidget extends StatelessWidget {
-  const FloatingActionButtonWidget({
+  FloatingActionButtonWidget({
     Key? key,
     required this.tabBarController,
   }) : super(key: key);

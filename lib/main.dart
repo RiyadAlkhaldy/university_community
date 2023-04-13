@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
     if (initial == true) {
       SharedPreferences.getInstance().then((value) {
         setState(() {
-         //!this for clear all dara in SharedPreferences .
+          //!this for clear all dara in SharedPreferences .
           // value.clear();
           token = value.getString('token');
           initial = false;

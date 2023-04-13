@@ -208,7 +208,7 @@ class ViewPostScreen extends StatelessWidget {
 }
 
 class ContentViewPostScreen extends StatelessWidget {
-  const ContentViewPostScreen({
+    ContentViewPostScreen({
     super.key,
     required this.post,
   });
@@ -243,7 +243,7 @@ class ContentViewPostScreen extends StatelessWidget {
 }
 
 class HeaderViewPostScreen extends StatelessWidget {
-  const HeaderViewPostScreen({
+  HeaderViewPostScreen({
     super.key,
     required this.post,
   });

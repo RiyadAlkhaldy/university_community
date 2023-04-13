@@ -32,7 +32,7 @@ class PostsController {
     );
      print('ok');
     print(response.data);
-    responsePosts = ResponsePosts.fromJson(response.data);
+    responsePosts = ResponsePosts.fromMap(response.data);
 
     if (response.statusCode == 200) {
       print(responsePosts.posts);

@@ -1,26 +1,75 @@
+import 'dart:convert';
+
 class ResponsePosts {
   ResponsePosts({
+    required this.status,
+    required this.message,
     required this.posts,
   });
-  late final List<Posts> posts;
+  final String status;
+  final String message;
+  final List<Posts> posts;
 
-  ResponsePosts.fromJson(Map<String, dynamic> json) {
-    posts = List.from(json['posts']).map((e) => Posts.fromJson(e)).toList();
+  ResponsePosts copyWith({
+    String? status,
+    String? message,
+    List<Posts>? posts,
+  }) {
+    return ResponsePosts(
+      status: status ?? this.status,
+      message: message ?? this.message,
+      posts: posts ?? this.posts,
+    );
   }
 
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['posts'] = posts.map((e) => e.toJson()).toList();
-    return _data;
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'status': status,
+      'message': message,
+      'posts': posts,
+    };
   }
+
+  factory ResponsePosts.fromMap(Map<String, dynamic> map) {
+    return ResponsePosts(
+      status: map['status'],
+      message: map['message'],
+      posts: List.from(map['posts']).map((e) => Posts.fromMap(e)).toList(),
+    );
+  }
+  // void (){
+  //   posts.map((posts) => Posts.fromMap( post));
+
+  // }
+
+  String toJson() => json.encode(toMap());
+
+  factory ResponsePosts.fromJson(String source) =>
+      ResponsePosts.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() =>
+      'ResponsePosts(status: $status, message: $message, posts: $posts)';
+
+  @override
+  bool operator ==(covariant ResponsePosts other) {
+    if (identical(this, other)) return true;
+
+    return other.status == status &&
+        other.message == message &&
+        other.posts == posts;
+  }
+
+  @override
+  int get hashCode => status.hashCode ^ message.hashCode ^ posts.hashCode;
 }
 
 class Posts {
   Posts({
     required this.id,
-    this.content,
+    required this.content,
     required this.type,
-    this.url,
+    required this.url,
     required this.userId,
     required this.sectionId,
     required this.collogeId,
@@ -31,53 +80,132 @@ class Posts {
     required this.name,
     required this.img,
   });
-  late final int id;
-  late final String? content;
-  late final int type;
-  late final String? url;
-  late final int userId;
-  late final int sectionId;
-  late final int collogeId;
-  late final String createdAt;
-  late final String updatedAt;
-  late final String collogeName;
-  late final String sectionName;
-  late final String name;
-  late final String img;
+  final int id;
+  final String content;
+  final int type;
+  final String? url;
+  final int userId;
+  final int sectionId;
+  final int collogeId;
+  final String createdAt;
+  final String updatedAt;
+  final String collogeName;
+  final String sectionName;
+  final String name;
+  final String img;
 
-  factory Posts.fromJson(Map<String, dynamic> json) {
+  Posts copyWith({
+    int? id,
+    String? content,
+    int? type,
+    String? url,
+    int? userId,
+    int? sectionId,
+    int? collogeId,
+    String? createdAt,
+    String? updatedAt,
+    String? collogeName,
+    String? sectionName,
+    String? name,
+    String? img,
+  }) {
     return Posts(
-        id: json['id'],
-        content: json['conten'] == null ? 'nullable' : json['content'],
-        type: json['type'],
-        url: json['url'],
-        userId: json['user_id'],
-        sectionId: json['section_id'],
-        collogeId: json['colloge_id'],
-        createdAt: json['created_at'],
-        updatedAt: json['updated_at'],
-        collogeName: json['colloge_name'],
-        sectionName: json['section_name'],
-        name: json['name'],
-        img: json['img']);
+      id: id ?? this.id,
+      content: content ?? this.content,
+      type: type ?? this.type,
+      url: url ?? this.url,
+      userId: userId ?? this.userId,
+      sectionId: sectionId ?? this.sectionId,
+      collogeId: collogeId ?? this.collogeId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      collogeName: collogeName ?? this.collogeName,
+      sectionName: sectionName ?? this.sectionName,
+      name: name ?? this.name,
+      img: img ?? this.img,
+    );
   }
 
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['id'] = id;
-    _data['content'] = content;
-    _data['type'] = type;
-    _data['url'] = url;
-    _data['user_id'] = userId;
-    _data['section_id'] = sectionId;
-    _data['colloge_id'] = collogeId;
-    _data['created_at'] = createdAt;
-    _data['updated_at'] = updatedAt;
-    _data['colloge_name'] = collogeName;
-    _data['section_name'] = sectionName;
-    _data['name'] = name;
-    _data['img'] = img;
-    return _data;
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'content': content,
+      'type': type,
+      'url': url!.isEmpty ? '' : url,
+      'user_id': userId,
+      'section_id': sectionId,
+      'colloge_id': collogeId,
+      'created_at': createdAt,
+      'updated_at': updatedAt,
+      'colloge_name': collogeName,
+      'section_name': sectionName,
+      'name': name,
+      'img': img,
+    };
+  }
+
+  factory Posts.fromMap(Map<String, dynamic> map) {
+    return Posts(
+      id: map['id'],
+      content: map['content'],
+      type: map['type'],
+      url: map['url'],
+      userId: map['user_id'],
+      sectionId: map['section_id'],
+      collogeId: map['colloge_id'],
+      createdAt: map['created_at'],
+      updatedAt: map['updated_at'],
+      collogeName: map['colloge_name'],
+      sectionName: map['section_name'],
+      name: map['name'],
+      img: map['img'],
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Posts.fromJson(String source) =>
+      Posts.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'Posts(id: $id, content: $content, type: $type, url: $url, userId: $userId, sectionId: $sectionId, collogeId: $collogeId, createdAt: $createdAt, updatedAt: $updatedAt, collogeName: $collogeName, sectionName: $sectionName, name: $name, img: $img)';
+  }
+
+  @override
+  bool operator ==(covariant Posts other) {
+    if (identical(this, other)) return true;
+
+    return other.id == id &&
+        other.content == content &&
+        other.type == type &&
+        other.url == url &&
+        other.userId == userId &&
+        other.sectionId == sectionId &&
+        other.collogeId == collogeId &&
+        other.createdAt == createdAt &&
+        other.updatedAt == updatedAt &&
+        other.collogeName == collogeName &&
+        other.sectionName == sectionName &&
+        other.name == name &&
+        other.img == img;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        content.hashCode ^
+        type.hashCode ^
+        url.hashCode ^
+        userId.hashCode ^
+        sectionId.hashCode ^
+        collogeId.hashCode ^
+        createdAt.hashCode ^
+        updatedAt.hashCode ^
+        collogeName.hashCode ^
+        sectionName.hashCode ^
+        name.hashCode ^
+        img.hashCode;
   }
 }
 

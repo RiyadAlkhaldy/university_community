@@ -10,6 +10,8 @@ import 'features/video/orientation/portrait_landscape_player_page.dart';
 class MobileLayoutScreen extends StatefulWidget {
   static const String routeName = 'moile-layout-screen';
 
+   MobileLayoutScreen({super.key});
+
   @override
   _MobileLayoutScreenState createState() => _MobileLayoutScreenState();
 }
