@@ -66,7 +66,7 @@ class _MyAppState extends State<MyApp> {
 
                 debugShowCheckedModeBanner: false,
                 title: 'Flutter Demo',
-                theme: isDarkMode ? MyThemes.darkTheme : MyThemes.lightTheme,
+                theme: isDarkMode ? MyThemes.darkTheme : MyThemes.darkTheme,
                 // home: SettingScreen(),
                 home: token == null ? StartScreen() : MobileLayoutScreen(),
               ));

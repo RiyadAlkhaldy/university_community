@@ -29,16 +29,16 @@ class BodyThePostImage extends StatelessWidget {
         );
       },
       child: Container(
-        margin: EdgeInsets.all(10.0),
+        margin: EdgeInsets.all(5.0),
         width: double.infinity,
-        height: 400.0,
+        height: 380.0,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25.0),
           boxShadow: [
             BoxShadow(
               color: Colors.black45,
               offset: Offset(0, 5),
-              blurRadius: 8.0,
+              blurRadius: 2.0,
             ),
           ],
           image: DecorationImage(

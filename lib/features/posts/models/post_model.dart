@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-class ResponsePosts {
-  ResponsePosts({
+class ResponseComment {
+  ResponseComment({
     required this.status,
     required this.message,
     required this.posts,
@@ -10,12 +10,12 @@ class ResponsePosts {
   final String message;
   final List<Posts> posts;
 
-  ResponsePosts copyWith({
+  ResponseComment copyWith({
     String? status,
     String? message,
     List<Posts>? posts,
   }) {
-    return ResponsePosts(
+    return ResponseComment(
       status: status ?? this.status,
       message: message ?? this.message,
       posts: posts ?? this.posts,
@@ -30,8 +30,8 @@ class ResponsePosts {
     };
   }
 
-  factory ResponsePosts.fromMap(Map<String, dynamic> map) {
-    return ResponsePosts(
+  factory ResponseComment.fromMap(Map<String, dynamic> map) {
+    return ResponseComment(
       status: map['status'],
       message: map['message'],
       posts: List.from(map['posts']).map((e) => Posts.fromMap(e)).toList(),
@@ -44,15 +44,15 @@ class ResponsePosts {
 
   String toJson() => json.encode(toMap());
 
-  factory ResponsePosts.fromJson(String source) =>
-      ResponsePosts.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory ResponseComment.fromJson(String source) =>
+      ResponseComment.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() =>
       'ResponsePosts(status: $status, message: $message, posts: $posts)';
 
   @override
-  bool operator ==(covariant ResponsePosts other) {
+  bool operator ==(covariant ResponseComment other) {
     if (identical(this, other)) return true;
 
     return other.status == status &&

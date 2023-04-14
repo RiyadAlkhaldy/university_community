@@ -6,6 +6,7 @@ import 'body_the_post_image.dart';
 import 'body_the_post_text.dart';
 import 'body_the_post_video.dart';
 import 'bottom_post.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class buildPost extends StatelessWidget {
   final int index;
@@ -75,86 +76,126 @@ class HeaderThePost extends ConsumerWidget {
     required this.index,
     required this.post,
   }) : super(key: key);
+  // DateTime? timeage;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ListTile(
-      // tileColor: Colors.grey,
-      leading: Container(
-        width: 50.0,
-        height: 50.0,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black45,
-              offset: Offset(0, 2),
-              blurRadius: 6.0,
-            ),
-          ],
-        ),
-        child: CircleAvatar(
-          child: ClipOval(
-            child: post.url == null
-                ? Image.asset('assets/images/user0.png')
-                : Image(
-                    height: 50.0,
-                    width: 50.0,
-                    image: NetworkImage(post.url!),
-                    fit: BoxFit.cover,
-                  ),
+    return Column(
+      // mainAxisAlignment: MainAxisAlignment.end,
+      // crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        ListTile(
+          trailing: Text(
+            post.collogeName,
+            textAlign: TextAlign.center,
+            style: Theme.of(context)
+                .textTheme
+                .headlineSmall!
+                .copyWith(fontSize: 20, color: Colors.black),
           ),
+          leading: Text(post.sectionName,
+              textAlign: TextAlign.end,
+              style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                    fontSize: 16,
+                    color: Colors.black.withOpacity(0.7),
+                  )),
         ),
-      ),
-      title: Text(
-        post.name,
-        style: Theme.of(context)
-            .textTheme
-            .headlineSmall!
-            .copyWith(fontSize: 20, color: Colors.black),
-      ),
-      subtitle: Text(post.content),
-      trailing: IconButton(
-        onPressed: () {
-          showDialog(
-            useRootNavigator: false,
-            context: context,
-            builder: (context) {
-              return Dialog(
-                child: ListView(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shrinkWrap: true,
-                    children: ['Delete', 'Modify']
-                        .map(
-                          (e) => InkWell(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(25.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color.fromARGB(115, 138, 222, 245),
-                                      offset: Offset(0, 5),
-                                      blurRadius: 15.0,
-                                    ),
-                                  ],
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 16),
-                                child: Text(e),
+        ListTile(
+          // contentPadding: EdgeInsets.symmetric(horizontal: 5),
+
+          leading: LefePostHeader(context, ref),
+          // leading: PostProfileImage(),
+          title: Text(
+            post.name,
+            textAlign: TextAlign.end,
+            style: Theme.of(context)
+                .textTheme
+                .headlineSmall!
+                .copyWith(fontSize: 20, color: Colors.black),
+          ),
+
+          subtitle: Text(post.content ?? '',
+              textAlign: TextAlign.end,
+              style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                    fontSize: 16,
+                    color: Colors.black.withOpacity(0.5),
+                  )),
+          trailing: PostProfileImage(),
+        ),
+      ],
+    );
+  }
+
+  IconButton LefePostHeader(BuildContext context, WidgetRef ref) {
+    return IconButton(
+      onPressed: () {
+        showDialog(
+          useRootNavigator: false,
+          context: context,
+          builder: (context) {
+            return Dialog(
+              child: ListView(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shrinkWrap: true,
+                  children: ['Delete', 'Modify']
+                      .map(
+                        (e) => InkWell(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color.fromARGB(115, 138, 222, 245),
+                                    offset: Offset(0, 5),
+                                    blurRadius: 15.0,
+                                  ),
+                                ],
                               ),
-                              onTap: () {
-                                ref
-                                    .read(postsProvider.notifier)
-                                    .deletePost(post.id);
-                                Navigator.of(context).pop();
-                              }),
-                        )
-                        .toList()),
-              );
-            },
-          );
-        },
-        icon: const Icon(Icons.more_vert),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 16),
+                              child: Text(e),
+                            ),
+                            onTap: () {
+                              ref
+                                  .read(postsProvider.notifier)
+                                  .deletePost(post.id);
+                              Navigator.of(context).pop();
+                            }),
+                      )
+                      .toList()),
+            );
+          },
+        );
+      },
+      icon: const Icon(Icons.more_vert),
+    );
+  }
+
+  Container PostProfileImage() {
+    return Container(
+      width: 50.0,
+      height: 50.0,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black45,
+            offset: Offset(0, 2),
+            blurRadius: 6.0,
+          ),
+        ],
+      ),
+      child: CircleAvatar(
+        child: ClipOval(
+          child: post.url == null
+              ? Image.asset('assets/images/user0.png')
+              : Image(
+                  height: 50.0,
+                  width: 50.0,
+                  image: NetworkImage(post.url!),
+                  fit: BoxFit.cover,
+                ),
+        ),
       ),
     );
   }

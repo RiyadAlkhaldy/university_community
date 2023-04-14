@@ -8,7 +8,7 @@ import '../screens/view_post_screen.dart';
 class BodyThePostVideo extends StatelessWidget {
   final int index;
   final Posts? post;
-    BodyThePostVideo({
+  BodyThePostVideo({
     Key? key,
     required this.index,
     this.post,

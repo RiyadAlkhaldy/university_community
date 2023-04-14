@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/features/posts/models/post_model.dart';
+
+import '../models/comment_model.dart';
 
 // final myrequest = Provider<ResponsePosts>((ref) {
 //   return MyRequest().getResponsePosts();
@@ -9,37 +10,42 @@ import 'package:untitled/features/posts/models/post_model.dart';
 // });
 
 final postsProvider =
-    StateNotifierProvider<RepositoryPosts, List<Posts>>((ref) {
+    StateNotifierProvider<RepositoryComment, List<Comment>>((ref) {
   // final myreq = ref.watch(myrequest);
-  return RepositoryPosts();
+  return RepositoryComment();
 });
-final AllPostsProvider = FutureProvider<List<Posts>>((ref) async {
-  List<Posts> posts = [];
-  await ref.read(postsProvider.notifier).getAllPosts.then((value) {
-    posts = ref.watch(postsProvider.notifier).state;
-    return posts;
+// final Provider = FutureProvider.family<, >((ref, ) async {
+//   return ;
+// });
+final AllcommentsProvider = FutureProvider.family((ref, int post_id) async {
+  List<Comment> comments = [];
+  await ref.read(postsProvider.notifier).getAllComments(post_id).then((value) {
+    comments = ref.watch(postsProvider.notifier).state;
+    return comments;
   });
-  return posts;
+  return comments;
 
   // ignore: invalid_use_of_protected_member
 });
 
-class RepositoryPosts extends StateNotifier<List<Posts>> {
+class RepositoryComment extends StateNotifier<List<Comment>> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final String url = 'http://10.0.2.2:8000/api/';
   final dio = Dio();
 
-  RepositoryPosts() : super([]);
+  RepositoryComment() : super([]);
 
   // RepositoryPosts();
-  Future<List<Posts>> get getAllPosts async {
+  Future<List<Comment>> getAllComments(int post_id) async {
     final SharedPreferences prefs = await _prefs;
-    final ResponseComment responsePosts;
+    final ResponseComment responseComment;
+    // final WidgetRef ref;
 
     Response response;
 
     response = await dio.post(
       '${url}posts/get-all-posts/',
+      queryParameters: {'post_id': post_id},
       options: Options(headers: {
         'authorization': 'Bearer ${prefs.getString('token')}',
         "Accept": "application/json"
@@ -48,7 +54,7 @@ class RepositoryPosts extends StateNotifier<List<Posts>> {
     print('ok');
     print(response.data);
     ResponseComment res = ResponseComment.fromMap(response.data);
-    List<Posts> posts = res.posts.map((e) => e).toList();
+    List<Comment> posts = res.comment.map((e) => e).toList();
 
     state = [...posts];
 
@@ -61,11 +67,11 @@ class RepositoryPosts extends StateNotifier<List<Posts>> {
     // ignore: use_build_context_synchronously
   }
 
-  void deletePost(int post_id) {
-    print('deleted number $post_id');
-    state = [
-      for (var post in state)
-        if (post.id != post_id) post,
-    ];
-  }
+  // void deletePost(int post_id) {
+  //   print('deleted number $post_id');
+  //   state = [
+  //     for (var post in state)
+  //       if (post.id != post_id) post,
+  //   ];
+  // }
 }
