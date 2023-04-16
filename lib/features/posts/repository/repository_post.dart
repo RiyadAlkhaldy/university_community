@@ -7,9 +7,9 @@ mixin fetchData {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final String url = 'http://10.0.2.2:8000/api/';
   final dio = Dio();
-  Stream<ResponseComment> get getAllPosts async* {
+  Stream<ResponsePosts> get getAllPosts async* {
     final SharedPreferences prefs = await _prefs;
-    ResponseComment? responsePosts;
+    ResponsePosts? responsePosts;
     Response response;
     response = await dio.post(
       '${url}posts/get-all-posts/',
@@ -20,7 +20,7 @@ mixin fetchData {
     );
     print('ok');
     print(response.data);
-    ResponseComment res = ResponseComment.fromMap(response.data);
+    ResponsePosts res = ResponsePosts.fromMap(response.data);
     responsePosts = responsePosts!
         .copyWith(posts: res.posts, message: res.message, status: res.status);
 
@@ -40,30 +40,29 @@ mixin fetchData {
 // });
 
 final responseProvider =
-    StateNotifierProvider<RepositoryPost, ResponseComment>((ref) {
+    StateNotifierProvider<RepositoryPost, ResponsePosts>((ref) {
   // final myreq = ref.watch(myrequest);
   return RepositoryPost();
 });
-final AllPostsProvider = FutureProvider<ResponseComment>((ref) async {
+final AllPostsProvider = FutureProvider<ResponsePosts>((ref) async {
   await ref.read(responseProvider.notifier).getAllPosts;
   // ignore: invalid_use_of_protected_member
   final posts = ref.watch(responseProvider);
   return posts;
 });
 
-class RepositoryPost extends StateNotifier<ResponseComment> {
+class RepositoryPost extends StateNotifier<ResponsePosts> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final String url = 'http://10.0.2.2:8000/api/';
   final dio = Dio();
 
   RepositoryPost()
-      : super(
-            ResponseComment(status: 'success', message: 'message', posts: []));
+      : super(ResponsePosts(status: 'success', message: 'message', posts: []));
 
   // RepositoryPosts();
-  Stream<ResponseComment> get getAllPosts async* {
+  Stream<ResponsePosts> get getAllPosts async* {
     final SharedPreferences prefs = await _prefs;
-    final ResponseComment responsePosts;
+    final ResponsePosts responsePosts;
 
     Response response;
 
@@ -76,7 +75,7 @@ class RepositoryPost extends StateNotifier<ResponseComment> {
     );
     print('ok');
     print(response.data);
-    ResponseComment res = ResponseComment.fromMap(response.data);
+    ResponsePosts res = ResponsePosts.fromMap(response.data);
     state = state.copyWith(
         posts: res.posts, message: res.message, status: res.status);
 

@@ -1,64 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/features/posts/models/comment_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:untitled/core/utils/loader.dart';
 import 'package:untitled/features/posts/models/post_model.dart';
-import 'package:untitled/features/posts/widgets/bottom_post.dart';
-import 'package:untitled/features/video/orientation/portrait_landscape_player_page.dart';
-import 'package:untitled/features/video/orientation/portrait_player_widget.dart';
+import 'package:untitled/features/posts/repository/repository_comments.dart';
 
-class ViewPostScreen extends StatelessWidget {
+import 'package:untitled/features/video/orientation/portrait_landscape_player_page.dart';
+
+import '../models/comment_model.dart';
+import '../repository/repository_posts.dart';
+import '../widgets/build_comment.dart';
+import '../widgets/build_post.dart';
+import 'package:timeago/timeago.dart' as timeago;
+
+class ViewPostScreen extends ConsumerStatefulWidget {
   static const String routeName = "view-post-screen";
   final Posts post;
 
   ViewPostScreen({required this.post});
 
-  Widget _buildComment(int index) {
-    return Padding(
-      padding: EdgeInsets.all(10.0),
-      child: ListTile(
-        leading: Container(
-          width: 50.0,
-          height: 50.0,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black45,
-                offset: Offset(0, 2),
-                blurRadius: 6.0,
-              ),
-            ],
-          ),
-          child: CircleAvatar(
-            child: ClipOval(
-              child: Image(
-                height: 50.0,
-                width: 50.0,
-                image: AssetImage(comments[index].authorImageUrl),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        ),
-        title: Text(
-          comments[index].authorName,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        subtitle: Text(comments[index].text),
-        trailing: IconButton(
-          icon: Icon(
-            Icons.favorite_border,
-          ),
-          color: Colors.grey,
-          onPressed: () => print('Like comment'),
-        ),
-      ),
-    );
-  }
+  @override
+  ConsumerState<ViewPostScreen> createState() => _ViewPostScreenState();
+}
+
+class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
+  bool dataLoaded = false;
+  bool inital = true;
 
   @override
   Widget build(BuildContext context) {
+    if (inital == true) {
+      ref
+          .watch(commentsProvider.notifier)
+          .getAllComments(widget.post.id)
+          .then((value) {
+        setState(() {
+          dataLoaded = true;
+          inital = false;
+        });
+      });
+    }
     return Scaffold(
       backgroundColor: Color(0xFFEDF0F6),
       body: SingleChildScrollView(
@@ -68,7 +48,7 @@ class ViewPostScreen extends StatelessWidget {
             Container(
               padding: EdgeInsets.only(top: 40.0),
               width: double.infinity,
-              height: 600.0,
+              // height: 600.0,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(25.0),
@@ -80,18 +60,21 @@ class ViewPostScreen extends StatelessWidget {
                     child: Column(
                       children: <Widget>[
                         //! view header the post
-                        HeaderViewPostScreen(post: post),
-                        if (post.type == 2) ContentViewPostScreen(post: post),
-                        if (post.type == 3)
+                        HeaderThePost(
+                          post: widget.post,
+                        ),
+                        if (widget.post.type == 2)
+                          ContentViewPostScreen(post: widget.post),
+                        if (widget.post.type == 3)
                           LimitedBox(
                               maxWidth: double.infinity,
                               maxHeight: 400,
                               child: PortraitLandscapePlayerPage(
-                                post: post,
+                                post: widget.post,
                                 index: 1,
                               )),
 
-                        BottomPost(context, post),
+                        Bottom_Post(context, widget.post, ref),
                       ],
                     ),
                   ),
@@ -101,25 +84,30 @@ class ViewPostScreen extends StatelessWidget {
             SizedBox(height: 10.0),
             // !this for build comments
             Container(
-              width: double.infinity,
-              // height: 600.0,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30.0),
-                  topRight: Radius.circular(30.0),
+                width: double.infinity,
+                // height: 600.0,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30.0),
+                    topRight: Radius.circular(30.0),
+                  ),
                 ),
-              ),
-              child: Column(
-                children: <Widget>[
-                  _buildComment(0),
-                  _buildComment(1),
-                  _buildComment(2),
-                  _buildComment(3),
-                  _buildComment(4),
-                ],
-              ),
-            )
+                child: dataLoaded == true
+                    ? Column(
+                        children: ref
+                            .watch(commentsProvider.notifier)
+                            .state
+                            .map((comment) => buildComment(0, context, comment))
+                            .toList())
+                    : Loader()
+                //
+                // buildComment(1,context,null),
+                // buildComment(2,context,null),
+                // buildComment(3,context,null),
+                // buildComment(4,context,null),
+
+                )
           ],
         ),
       ),
@@ -176,7 +164,7 @@ class ViewPostScreen extends StatelessWidget {
                       child: Image(
                         height: 48.0,
                         width: 48.0,
-                        image: NetworkImage(post.url!),
+                        image: NetworkImage(widget.post.img),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -208,7 +196,7 @@ class ViewPostScreen extends StatelessWidget {
 }
 
 class ContentViewPostScreen extends StatelessWidget {
-    ContentViewPostScreen({
+  ContentViewPostScreen({
     super.key,
     required this.post,
   });
@@ -346,4 +334,87 @@ class HeaderViewPostScreen extends StatelessWidget {
       ],
     );
   }
+}
+
+Widget Bottom_Post(BuildContext context, Posts post, [WidgetRef? refe]) {
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 20.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    //!likePosts
+                    IconButton(
+                        icon: Icon(
+                          Icons.favorite_border,
+                          color: post.amILike > 0 ? Colors.red : Colors.black,
+                        ),
+                        iconSize: 30.0,
+                        onPressed: () {
+                          print('Like post');
+
+                          refe!
+                              .read(postsProvider.notifier)
+                              .addLikeOrUndo(post);
+                        }),
+                    Text(
+                      post.numberLikes.toString(),
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: Colors.black87, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+                SizedBox(width: 20.0),
+                Row(
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.chat),
+                      iconSize: 30.0,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ViewPostScreen(
+                              post: post,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    Text(
+                      post.numberComments.toString(),
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: Colors.black87, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.bookmark_border,
+              ),
+              iconSize: 30.0,
+              onPressed: () => print('Save post'),
+            ),
+          ],
+        ),
+        // time age
+        Text(
+            timeago.format(
+              DateTime.parse(post.createdAt),
+            ),
+            style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                  fontSize: 16,
+                  color: Colors.black.withOpacity(0.5),
+                )),
+      ],
+    ),
+  );
 }

@@ -16,7 +16,7 @@ class AllPostScreen extends ConsumerStatefulWidget {
   ConsumerState<AllPostScreen> createState() => _PostScreenState();
 }
 
-var checkposts;
+ 
 
 class _PostScreenState extends ConsumerState<AllPostScreen> {
   // @override
@@ -74,47 +74,7 @@ class _PostScreenState extends ConsumerState<AllPostScreen> {
                     // childCount: data.length,
                     )
                 : Loader(),
-            // postss.when(
-            //   data: (data) {
-            //     // print('length of the data ${data.length}');
-            //     return Column(
-            //         children: data
-            //             .map((p) => buildPost(
-            //                   index: 0,
-            //                   contextl: context,
-            //                   post: p,
-            //                 ))
-            //             .toList()
-
-            //         // childCount: data.length,
-            //         );
-            //   },
-            //   error: (error, stackTrace) => Center(
-            //     child: Text(error.toString()),
-            //   ),
-            //   loading: () => Loader(),
-            // ),
-
-            // Consumer(
-            //   builder: (context, ref, child) {
-            //     final pos = ref.watch(getAllPostsProvider);
-            //     return pos.when(
-            //       data: (data) => Column(
-            //           children: data
-            //               .map((p) => buildPost(
-            //                     index: 0,
-            //                     contextl: context,
-            //                     post: p,
-            //                   ))
-            //               .toList()
-
-            //           // childCount: data.length,
-            //           ),
-            //       error: (error, stackTrace) => Text("error"),
-            //       loading: () => const Loader(),
-            //     );
-            //   },
-            // ),
+            // postss.when
           ]),
 
           // ],

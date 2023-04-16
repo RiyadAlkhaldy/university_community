@@ -5,57 +5,57 @@ import 'package:flutter/foundation.dart';
 class ResponseComment {
   ResponseComment({
     required this.status,
-    required this.comment,
+    required this.comments,
   });
   final String status;
-  final List<Comment> comment;
+  final List<Comments> comments;
 
   ResponseComment copyWith({
     String? status,
-    List<Comment>? comment,
+    List<Comments>? comment,
   }) {
     return ResponseComment(
       status: status ?? this.status,
-      comment: comment ?? this.comment,
+      comments: comment ?? this.comments,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'status': status,
-      'comment': comment.map((x) => x.toMap()).toList(),
+      'comment': comments.map((x) => x.toMap()).toList(),
     };
   }
 
   factory ResponseComment.fromMap(Map<String, dynamic> map) {
     return ResponseComment(
       status: map['status'] as String,
-      comment: List<Comment>.from((map['comment'] as List<int>).map<Comment>((x) => Comment.fromMap(x as Map<String,dynamic>),),),
+      comments:
+          List.from(map['comment']).map((e) => Comments.fromMap(e)).toList(),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory ResponseComment.fromJson(String source) => ResponseComment.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory ResponseComment.fromJson(String source) =>
+      ResponseComment.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'ResponseComment(status: $status, comment: $comment)';
+  String toString() => 'ResponseComment(status: $status, comment: $comments)';
 
   @override
   bool operator ==(covariant ResponseComment other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.status == status &&
-      listEquals(other.comment, comment);
+
+    return other.status == status && listEquals(other.comments, comments);
   }
 
   @override
-  int get hashCode => status.hashCode ^ comment.hashCode;
+  int get hashCode => status.hashCode ^ comments.hashCode;
 }
 
-class Comment {
-  Comment({
+class Comments {
+  Comments({
     required this.id,
     required this.comment,
     required this.userId,
@@ -72,9 +72,9 @@ class Comment {
   final String createdAt;
   final String updatedAt;
   final String name;
-  final String img;
+  final String? img;
 
-  Comment copyWith({
+  Comments copyWith({
     int? id,
     String? comment,
     int? userId,
@@ -84,7 +84,7 @@ class Comment {
     String? name,
     String? img,
   }) {
-    return Comment(
+    return Comments(
       id: id ?? this.id,
       comment: comment ?? this.comment,
       userId: userId ?? this.userId,
@@ -109,8 +109,8 @@ class Comment {
     };
   }
 
-  factory Comment.fromMap(Map<String, dynamic> map) {
-    return Comment(
+  factory Comments.fromMap(Map<String, dynamic> map) {
+    return Comments(
       id: map['id'],
       comment: map['comment'],
       userId: map['userId'],
@@ -124,8 +124,8 @@ class Comment {
 
   String toJson() => json.encode(toMap());
 
-  factory Comment.fromJson(String source) =>
-      Comment.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Comments.fromJson(String source) =>
+      Comments.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -133,7 +133,7 @@ class Comment {
   }
 
   @override
-  bool operator ==(covariant Comment other) {
+  bool operator ==(covariant Comments other) {
     if (identical(this, other)) return true;
 
     return other.id == id &&

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-class ResponseComment {
-  ResponseComment({
+class ResponsePosts {
+  ResponsePosts({
     required this.status,
     required this.message,
     required this.posts,
@@ -10,12 +10,12 @@ class ResponseComment {
   final String message;
   final List<Posts> posts;
 
-  ResponseComment copyWith({
+  ResponsePosts copyWith({
     String? status,
     String? message,
     List<Posts>? posts,
   }) {
-    return ResponseComment(
+    return ResponsePosts(
       status: status ?? this.status,
       message: message ?? this.message,
       posts: posts ?? this.posts,
@@ -30,8 +30,8 @@ class ResponseComment {
     };
   }
 
-  factory ResponseComment.fromMap(Map<String, dynamic> map) {
-    return ResponseComment(
+  factory ResponsePosts.fromMap(Map<String, dynamic> map) {
+    return ResponsePosts(
       status: map['status'],
       message: map['message'],
       posts: List.from(map['posts']).map((e) => Posts.fromMap(e)).toList(),
@@ -44,15 +44,15 @@ class ResponseComment {
 
   String toJson() => json.encode(toMap());
 
-  factory ResponseComment.fromJson(String source) =>
-      ResponseComment.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory ResponsePosts.fromJson(String source) =>
+      ResponsePosts.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() =>
       'ResponsePosts(status: $status, message: $message, posts: $posts)';
 
   @override
-  bool operator ==(covariant ResponseComment other) {
+  bool operator ==(covariant ResponsePosts other) {
     if (identical(this, other)) return true;
 
     return other.status == status &&
@@ -79,6 +79,9 @@ class Posts {
     required this.sectionName,
     required this.name,
     required this.img,
+    required this.numberComments,
+    required this.numberLikes,
+    required this.amILike,
   });
   final int id;
   final String content;
@@ -93,6 +96,9 @@ class Posts {
   final String sectionName;
   final String name;
   final String img;
+  final int numberComments;
+  final int numberLikes;
+   final int amILike;
 
   Posts copyWith({
     int? id,
@@ -108,6 +114,9 @@ class Posts {
     String? sectionName,
     String? name,
     String? img,
+    int? numberComments,
+    int? numberLikes,
+    int? amILike,
   }) {
     return Posts(
       id: id ?? this.id,
@@ -123,6 +132,9 @@ class Posts {
       sectionName: sectionName ?? this.sectionName,
       name: name ?? this.name,
       img: img ?? this.img,
+      numberComments: numberComments ?? this.numberComments,
+      numberLikes: numberLikes ?? this.numberLikes,
+      amILike: amILike ?? this.amILike,
     );
   }
 
@@ -141,6 +153,9 @@ class Posts {
       'section_name': sectionName,
       'name': name,
       'img': img,
+      'numberComments': numberComments,
+      'numberLikes': numberLikes,
+      'amILike': amILike,
     };
   }
 
@@ -159,6 +174,9 @@ class Posts {
       sectionName: map['section_name'],
       name: map['name'],
       img: map['img'],
+      numberComments: map['numberComments'],
+      numberLikes: map['numberLikes'],
+      amILike: map['amILike'],
     );
   }
 
@@ -169,7 +187,7 @@ class Posts {
 
   @override
   String toString() {
-    return 'Posts(id: $id, content: $content, type: $type, url: $url, userId: $userId, sectionId: $sectionId, collogeId: $collogeId, createdAt: $createdAt, updatedAt: $updatedAt, collogeName: $collogeName, sectionName: $sectionName, name: $name, img: $img)';
+    return 'Posts(id: $id, content: $content, type: $type, url: $url, userId: $userId, sectionId: $sectionId, collogeId: $collogeId, createdAt: $createdAt, updatedAt: $updatedAt, collogeName: $collogeName, sectionName: $sectionName, name: $name, img: $img, numberLikes: $numberLikes, numberComments: $numberComments, amILike: $amILike ) \n';
   }
 
   @override
@@ -188,7 +206,10 @@ class Posts {
         other.collogeName == collogeName &&
         other.sectionName == sectionName &&
         other.name == name &&
-        other.img == img;
+        other.img == img &&
+        other.numberComments == numberComments &&
+        other.numberLikes == numberLikes &&
+        other.amILike == amILike;
   }
 
   @override
@@ -205,7 +226,10 @@ class Posts {
         collogeName.hashCode ^
         sectionName.hashCode ^
         name.hashCode ^
-        img.hashCode;
+        img.hashCode ^
+        numberComments.hashCode ^
+        numberLikes.hashCode ^
+        amILike.hashCode;
   }
 }
 

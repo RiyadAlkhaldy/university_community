@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled/features/posts/models/post_model.dart';
+
+import '../../../core/constant.dart';
 
 // final myrequest = Provider<ResponsePosts>((ref) {
 //   return MyRequest().getResponsePosts();
@@ -26,7 +29,6 @@ final AllPostsProvider = FutureProvider<List<Posts>>((ref) async {
 
 class RepositoryPosts extends StateNotifier<List<Posts>> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  final String url = 'http://10.0.2.2:8000/api/';
   final dio = Dio();
 
   RepositoryPosts() : super([]);
@@ -34,12 +36,12 @@ class RepositoryPosts extends StateNotifier<List<Posts>> {
   // RepositoryPosts();
   Future<List<Posts>> get getAllPosts async {
     final SharedPreferences prefs = await _prefs;
-    final ResponseComment responsePosts;
+    final ResponsePosts responsePosts;
 
     Response response;
 
     response = await dio.post(
-      '${url}posts/get-all-posts/',
+      '${ApiUrl}posts/get-all-posts/',
       options: Options(headers: {
         'authorization': 'Bearer ${prefs.getString('token')}',
         "Accept": "application/json"
@@ -47,7 +49,7 @@ class RepositoryPosts extends StateNotifier<List<Posts>> {
     );
     print('ok');
     print(response.data);
-    ResponseComment res = ResponseComment.fromMap(response.data);
+    ResponsePosts res = ResponsePosts.fromMap(response.data);
     List<Posts> posts = res.posts.map((e) => e).toList();
 
     state = [...posts];
@@ -68,4 +70,25 @@ class RepositoryPosts extends StateNotifier<List<Posts>> {
         if (post.id != post_id) post,
     ];
   }
+
+  void addLikeOrUndo(Posts currentPost) {
+    List<Posts> posts = [];
+    if (currentPost.amILike == 0) {
+      state.forEach((post) {
+        if (post.id == currentPost.id)
+          post = post.copyWith(amILike: 1, numberLikes: post.numberLikes + 1);
+        posts.add(post);
+      });
+    } else {
+      state.forEach((post) {
+        if (post.id == currentPost.id)
+          post = post.copyWith(amILike: 0, numberLikes: post.numberLikes - 1);
+        posts.add(post);
+      });
+    }
+    state = [...posts];
+
+    print('liked post number ${currentPost}');
+  }
+  // State =[...posts];
 }

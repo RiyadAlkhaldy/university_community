@@ -5,43 +5,37 @@ import 'package:untitled/features/posts/models/post_model.dart';
 
 import '../screens/view_post_screen.dart';
 
-class BodyThePostText extends StatefulWidget {
+class BodyThePostText extends StatelessWidget {
   final Posts post;
-  final int index;
+
   BodyThePostText({
     Key? key,
     required this.post,
-    required this.index,
   }) : super(key: key);
 
-  @override
-  State<BodyThePostText> createState() => _BodyThePostTextState();
-}
-
-class _BodyThePostTextState extends State<BodyThePostText> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onDoubleTap: () => print('Like post'),
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (_) => ViewPostScreen(
-        //       post: post,
-        //     ),
-        //   ),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ViewPostScreen(
+              post: post,
+            ),
+          ),
+        );
       },
       child: Container(
-        margin: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(10.0),
         width: double.infinity,
         height: 200.0,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25.0),
           boxShadow: [
             BoxShadow(
-              color: Colors.black45,
+              color: Colors.black26,
               offset: Offset(0, 5),
               blurRadius: 8.0,
             ),
@@ -49,14 +43,14 @@ class _BodyThePostTextState extends State<BodyThePostText> {
         ),
         child: Container(
             child: Text(
-          'jlaflasjfl;asj;fffffffffffffffffflafdj;dal       sjdlfasfioawlfnajosfdlaj;fasnkfdjasklffffffffffflafdj;dal       sjdlfasfioawlfnajosfdlaj;fasnkfdjasklffffffffffflafdj;dal       sjdlfasfioawlfnajosfdlaj;fasnkfdjasklffffffffffflafdj;dal     ffffffffffflafdj;dal       sjdlfasfioawlfnajosfdlaj;fasnkfdjasklffffffffffflafdj;dal       sjdlfasfioawlfnajosfdlaj;fasnkfdjaskl  sjdlfasfioawlfnajosfdlaj;fasnkfdjasklffffffffffflafdj;dal       sjdlfasfioawlfnajosfdlaj;fasnkfdjaskldfjaskfjanCurfjlaasfjlksljsflafcffffffffffffffffffffffffffffffffffffffalssssssssssssfal;sejf;lasf;asffffffffffffffflasflsflllll',
+          post.content,
           // overflow: TextOverflow.ellipsis,
           maxLines: 4,
           softWrap: true,
           style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                height: 1.5,
-                overflow: TextOverflow.ellipsis,
-              ),
+              height: 1.5,
+              overflow: TextOverflow.ellipsis,
+              color: Colors.black),
         )),
       ),
     );

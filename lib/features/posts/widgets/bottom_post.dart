@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/post_model.dart';
+import '../repository/repository_posts.dart';
 import '../screens/view_post_screen.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -17,13 +19,24 @@ Widget BottomPost(BuildContext context, Posts post) {
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    IconButton(
-                      icon: Icon(Icons.favorite_border),
-                      iconSize: 30.0,
-                      onPressed: () => print('Like post'),
+                    //!likePosts
+                    Consumer(
+                      builder: (context, ref, child) => IconButton(
+                          icon: Icon(
+                            Icons.favorite_border,
+                            color: post.amILike > 0 ? Colors.red : Colors.black,
+                          ),
+                          iconSize: 30.0,
+                          onPressed: () {
+                            print('Like post');
+                            
+                            ref
+                                .read(postsProvider.notifier)
+                                .addLikeOrUndo(post);
+                          }),
                     ),
                     Text(
-                      '2,515',
+                      post.numberLikes.toString(),
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: Colors.black87, fontWeight: FontWeight.w600),
                     ),
@@ -47,20 +60,18 @@ Widget BottomPost(BuildContext context, Posts post) {
                       },
                     ),
                     Text(
-                      '350',
+                      post.numberComments.toString(),
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: Colors.black87, fontWeight: FontWeight.w600),
-                      // style: TextStyle(
-                      //   fontSize: 14.0,
-                      //   fontWeight: FontWeight.w600,
-                      // ),
                     ),
                   ],
                 ),
               ],
             ),
             IconButton(
-              icon: Icon(Icons.bookmark_border),
+              icon: Icon(
+                Icons.bookmark_border,
+              ),
               iconSize: 30.0,
               onPressed: () => print('Save post'),
             ),

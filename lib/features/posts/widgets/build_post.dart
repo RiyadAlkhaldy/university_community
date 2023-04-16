@@ -41,12 +41,10 @@ class buildPost extends StatelessWidget {
                   //! Header The Post Widget
                   // if (post!.type ==)
                   HeaderThePost(
-                    index: index,
                     post: post!,
                   ),
 
-                  if (post!.type == 2)
-                    BodyThePostImage(index: index, post: post!),
+                  if (post!.type == 2) BodyThePostImage(post: post!),
                   if (post!.type == 3)
                     BodyThePostVideo(
                       index: index,
@@ -54,10 +52,9 @@ class buildPost extends StatelessWidget {
                     ),
                   if (post!.type == 1)
                     BodyThePostText(
-                      index: 1,
                       post: post!,
                     ),
-                  BottomPost(context, post!),
+                  BottomPost(context, post!,),
                 ],
               ),
             ),
@@ -69,11 +66,9 @@ class buildPost extends StatelessWidget {
 }
 
 class HeaderThePost extends ConsumerWidget {
-  final int index;
   final Posts post;
   HeaderThePost({
     Key? key,
-    required this.index,
     required this.post,
   }) : super(key: key);
   // DateTime? timeage;
@@ -114,7 +109,7 @@ class HeaderThePost extends ConsumerWidget {
                 .copyWith(fontSize: 20, color: Colors.black),
           ),
 
-          subtitle: Text(post.content ?? '',
+          subtitle: Text(post.content,
               textAlign: TextAlign.end,
               style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                     fontSize: 16,
@@ -187,8 +182,8 @@ class HeaderThePost extends ConsumerWidget {
       ),
       child: CircleAvatar(
         child: ClipOval(
-          child: post.url == null
-              ? Image.asset('assets/images/user0.png')
+          child: post.img.isEmpty
+              ? Image.asset('assets/images/user1.png')
               : Image(
                   height: 50.0,
                   width: 50.0,

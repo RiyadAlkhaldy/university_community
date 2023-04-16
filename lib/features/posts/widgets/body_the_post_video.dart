@@ -19,7 +19,7 @@ class BodyThePostVideo extends StatelessWidget {
     return InkWell(
         // onTap: () => print('Like post'),
         // onTap: () => print("push video"),
-        onTap: () {
+        onDoubleTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(

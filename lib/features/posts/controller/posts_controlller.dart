@@ -19,7 +19,7 @@ class PostsController {
 
   Future<List<Posts>> get getAllPosts async {
     final SharedPreferences prefs = await _prefs;
-    final ResponseComment responsePosts;
+    final ResponsePosts responsePosts;
 
     Response response;
 
@@ -32,7 +32,7 @@ class PostsController {
     );
     print('ok');
     print(response.data);
-    responsePosts = ResponseComment.fromMap(response.data);
+    responsePosts = ResponsePosts.fromMap(response.data);
 
     if (response.statusCode == 200) {
       print(responsePosts.posts);

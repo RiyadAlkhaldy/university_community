@@ -11,10 +11,10 @@ class MyThemes {
       dividerColor: Colors.white,
       textTheme: TextTheme(
           titleSmall: TextStyle(
-              // backgroundColor: Colors.blue,
-              fontWeight: FontWeight.bold,
-              // fontStyle: FontStyle.normal
-              )));
+        // backgroundColor: Colors.blue,
+        fontWeight: FontWeight.bold,
+        // fontStyle: FontStyle.normal
+      )));
 
   static final lightTheme = ThemeData(
     scaffoldBackgroundColor: Colors.white,

@@ -7,11 +7,11 @@ import '../screens/view_post_screen.dart';
 
 class BodyThePostImage extends StatelessWidget {
   final Posts post;
-  final int index;
+  
   BodyThePostImage({
     Key? key,
     required this.post,
-    required this.index,
+     
   }) : super(key: key);
 
   @override
