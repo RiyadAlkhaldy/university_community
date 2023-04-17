@@ -71,7 +71,7 @@ class Comments {
   final int postId;
   final String createdAt;
   final String updatedAt;
-  final String name;
+  final String? name;
   final String? img;
 
   Comments copyWith({
@@ -100,10 +100,10 @@ class Comments {
     return <String, dynamic>{
       'id': id,
       'comment': comment,
-      'userId': userId,
-      'postId': postId,
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
+      'user_id': userId,
+      'post_id': postId,
+      'created_at': createdAt,
+      'updated_at': updatedAt,
       'name': name,
       'img': img,
     };
@@ -113,12 +113,12 @@ class Comments {
     return Comments(
       id: map['id'],
       comment: map['comment'],
-      userId: map['userId'],
-      postId: map['postId'],
-      createdAt: map['createdAt'],
-      updatedAt: map['updatedAt'],
-      name: map['name'],
-      img: map['img'],
+      userId: int.parse(map['user_id'].toString()),
+      postId: int.parse(map['post_id'].toString()),
+      createdAt: map['created_at'],
+      updatedAt: map['updated_at'],
+      name: map['name'] ?? '',
+      img: map['img'] ?? '',
     );
   }
 

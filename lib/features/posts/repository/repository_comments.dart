@@ -13,7 +13,6 @@ import '../models/comment_model.dart';
 
 final commentsProvider =
     StateNotifierProvider<RepositoryComment, List<Comments>>((ref) {
-  // final myreq = ref.watch(myrequest);
   return RepositoryComment();
 });
 // final Provider = FutureProvider.family<, >((ref, ) async {
@@ -45,19 +44,23 @@ class RepositoryComment extends StateNotifier<List<Comments>> {
     final ResponseComment responseComment;
     // final WidgetRef ref;
 
-    Response response;
+    Response? response;
+    try {
+      response = await dio.post(
+        '${ApiUrl}comment/get-all-comments/',
+        queryParameters: {'post_id': post_id},
+        options: Options(headers: {
+          'authorization': 'Bearer ${prefs.getString('token')}',
+          "Accept": "application/json"
+        }),
+      );
+      print('ok');
+      print(response.data);
+    } catch (e) {
+      print(e);
+    }
 
-    response = await dio.post(
-      '${ApiUrl}comment/get-all-comments/',
-      queryParameters: {'post_id': post_id},
-      options: Options(headers: {
-        'authorization': 'Bearer ${prefs.getString('token')}',
-        "Accept": "application/json"
-      }),
-    );
-    print('ok');
-    print(response.data);
-    ResponseComment res = ResponseComment.fromMap(response.data);
+    ResponseComment res = ResponseComment.fromMap(response!.data);
     List<Comments> comments = res.comments;
 
     state = [...comments];
@@ -72,11 +75,54 @@ class RepositoryComment extends StateNotifier<List<Comments>> {
     // ignore: use_build_context_synchronously
   }
 
-  // void deletePost(int post_id) {
-  //   print('deleted number $post_id');
-  //   state = [
-  //     for (var post in state)
-  //       if (post.id != post_id) post,
-  //   ];
-  // }
+  void addComment({required String comment, required int post_id}) async {
+    final SharedPreferences prefs = await _prefs;
+    final Comments _Comment;
+
+    Response? response;
+    try {
+      response = await dio.post(
+        '${ApiUrl}comment/add-comment/',
+        queryParameters: {
+          'comment': comment,
+          'user_id': prefs.getString('id'),
+          'post_id': post_id,
+        },
+        options: Options(headers: {
+          'authorization': 'Bearer ${prefs.getString('token')}',
+          "Accept": "application/json"
+        }),
+      );
+      print(response.data['comment']);
+      _Comment = Comments.fromMap(response.data['comment']);
+      if (state.isEmpty)
+        state = [_Comment];
+      else
+        state = [_Comment, ...state];
+    } catch (e) {
+      print(e);
+    }
+
+    // print('add the Comment number ${currentComment}');
+  }
+
+  void updateComment(Comments currentComment) {
+    List<Comments> comments = [];
+
+    state.forEach((comment) {
+      if (comment.id == currentComment.id) comment = currentComment;
+      comments.add(comment);
+    });
+    state = [...comments];
+
+    print('update the Comment number ${currentComment}');
+  }
+
+  void deleteComment(int comment_id) {
+    print('deleted number $comment_id');
+    state = [
+      for (var comment in state)
+        if (comment.id != comment_id) comment,
+    ];
+  }
 }

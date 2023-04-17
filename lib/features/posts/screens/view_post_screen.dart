@@ -3,14 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:untitled/core/utils/loader.dart';
 import 'package:untitled/features/posts/models/post_model.dart';
 import 'package:untitled/features/posts/repository/repository_comments.dart';
-
 import 'package:untitled/features/video/orientation/portrait_landscape_player_page.dart';
-
 import '../models/comment_model.dart';
 import '../repository/repository_posts.dart';
 import '../widgets/build_comment.dart';
 import '../widgets/build_post.dart';
 import 'package:timeago/timeago.dart' as timeago;
+
+import '../widgets/view_post_text_screen.dart';
 
 class ViewPostScreen extends ConsumerStatefulWidget {
   static const String routeName = "view-post-screen";
@@ -25,9 +25,11 @@ class ViewPostScreen extends ConsumerStatefulWidget {
 class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
   bool dataLoaded = false;
   bool inital = true;
-
-  @override
+  TextEditingController addCommentController = TextEditingController();
+  // Comments varComment ;
   Widget build(BuildContext context) {
+    final posts = ref.watch(postStateProvider);
+
     if (inital == true) {
       ref
           .watch(commentsProvider.notifier)
@@ -65,6 +67,10 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
                         ),
                         if (widget.post.type == 2)
                           ContentViewPostScreen(post: widget.post),
+                        if (widget.post.type == 1)
+                          ViewPostText(
+                            post: widget.post,
+                          ),
                         if (widget.post.type == 3)
                           LimitedBox(
                               maxWidth: double.infinity,
@@ -74,7 +80,7 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
                                 index: 1,
                               )),
 
-                        Bottom_Post(context, widget.post, ref),
+                        Bottom_Post(context, posts!, ref),
                       ],
                     ),
                   ),
@@ -94,19 +100,19 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
                   ),
                 ),
                 child: dataLoaded == true
-                    ? Column(
-                        children: ref
-                            .watch(commentsProvider.notifier)
-                            .state
-                            .map((comment) => buildComment(0, context, comment))
-                            .toList())
+                    ? Consumer(
+                        builder: (_, WidgetRef reff, __) {
+                          return Column(
+                              children: reff
+                                  .watch(commentsProvider.notifier)
+                                  .state
+                                  .map((comment) =>
+                                      buildComment(0, context, comment))
+                                  .toList());
+                        },
+                      )
                     : Loader()
-                //
                 // buildComment(1,context,null),
-                // buildComment(2,context,null),
-                // buildComment(3,context,null),
-                // buildComment(4,context,null),
-
                 )
           ],
         ),
@@ -133,69 +139,103 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
           child: Padding(
             padding: EdgeInsets.all(12.0),
             child: TextField(
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                  borderSide: BorderSide(color: Colors.grey),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                  borderSide: BorderSide(color: Colors.grey),
-                ),
-                contentPadding: EdgeInsets.all(20.0),
-                hintText: 'Add a comment',
-                prefixIcon: Container(
-                  margin: EdgeInsets.all(4.0),
-                  width: 48.0,
-                  height: 48.0,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black45,
-                        offset: Offset(0, 2),
-                        blurRadius: 6.0,
-                      ),
-                    ],
-                  ),
-                  child: CircleAvatar(
-                    child: ClipOval(
-                      child: Image(
-                        height: 48.0,
-                        width: 48.0,
-                        image: NetworkImage(widget.post.img),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                suffixIcon: Container(
-                  margin: EdgeInsets.only(right: 4.0),
-                  width: 70.0,
-                  child: MaterialButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    color: Color(0xFF23B66F),
-                    onPressed: () => print('Post comment'),
-                    child: Icon(
-                      Icons.send,
-                      size: 25.0,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: Colors.black),
+              controller: addCommentController,
+              decoration: InputDec(posts),
             ),
           ),
         ),
       ),
     );
   }
+
+  InputDecoration InputDec(Posts post) => InputDecoration(
+        labelStyle: Theme.of(context)
+            .textTheme
+            .bodyMedium!
+            .copyWith(color: Colors.black),
+        border: InputBorder.none,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.0),
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.0),
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        contentPadding: EdgeInsets.all(20.0),
+        hintText: 'Add a comment',
+        hintStyle: Theme.of(context)
+            .textTheme
+            .bodyMedium!
+            .copyWith(color: Colors.black45),
+        prefixIcon: Container(
+          margin: EdgeInsets.all(4.0),
+          width: 48.0,
+          height: 48.0,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black45,
+                offset: Offset(0, 2),
+                blurRadius: 6.0,
+              ),
+            ],
+          ),
+          child: CircleAvatar(
+            child: ClipOval(
+              child: widget.post.img.isEmpty
+                  ? Image.asset('assets/images/user1.png')
+                  : Image(
+                      height: 48.0,
+                      width: 48.0,
+                      image: NetworkImage(widget.post.img),
+                      fit: BoxFit.cover,
+                    ),
+            ),
+          ),
+        ),
+        suffixIcon: Container(
+          margin: EdgeInsets.only(right: 4.0),
+          width: 70.0,
+          child: Consumer(
+            builder: (_, WidgetRef reff, __) {
+              return MaterialButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                color: Color(0xFF23B66F),
+                onPressed: () async {
+                  print('Post comment');
+                  if (addCommentController.text.trim().isNotEmpty) {
+                    reff.read(commentsProvider.notifier).addComment(
+                        comment: addCommentController.text.trim().toString(),
+                        post_id: post.id);
+                    reff
+                        .read(postsProvider.notifier)
+                        .updateNumberTheComments(post, 1);
+                    addCommentController.clear();
+                    reff.read(postStateProvider.notifier).state =
+                        post.copyWith(numberComments: post.numberComments + 1);
+                  }
+                },
+                child: Icon(
+                  Icons.send,
+                  size: 25.0,
+                  color: Colors.white,
+                ),
+              );
+            },
+          ),
+        ),
+      );
 }
 
-class ContentViewPostScreen extends StatelessWidget {
+class ContentViewPostScreen extends ConsumerWidget {
   ContentViewPostScreen({
     super.key,
     required this.post,
@@ -204,7 +244,9 @@ class ContentViewPostScreen extends StatelessWidget {
   final Posts post;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final posts = ref.watch(postStateProvider);
+
     return InkWell(
       onDoubleTap: () => print('Like post'),
       child: Container(
@@ -221,7 +263,7 @@ class ContentViewPostScreen extends StatelessWidget {
             ),
           ],
           image: DecorationImage(
-            image: NetworkImage(post.url!),
+            image: NetworkImage(posts!.url!),
             fit: BoxFit.fitWidth,
           ),
         ),
@@ -230,7 +272,7 @@ class ContentViewPostScreen extends StatelessWidget {
   }
 }
 
-class HeaderViewPostScreen extends StatelessWidget {
+class HeaderViewPostScreen extends ConsumerWidget {
   HeaderViewPostScreen({
     super.key,
     required this.post,
@@ -239,7 +281,9 @@ class HeaderViewPostScreen extends StatelessWidget {
   final Posts post;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final posts = ref.watch(postStateProvider);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -270,19 +314,19 @@ class HeaderViewPostScreen extends StatelessWidget {
                   child: Image(
                     height: 50.0,
                     width: 50.0,
-                    image: NetworkImage(post.content!),
+                    image: NetworkImage(posts!.content),
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
             ),
             title: Text(
-              post.content!,
+              post.content,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
-            subtitle: Text(post.content!),
+            subtitle: Text(post.content),
             trailing: IconButton(
               onPressed: () {
                 showDialog(
@@ -336,7 +380,7 @@ class HeaderViewPostScreen extends StatelessWidget {
   }
 }
 
-Widget Bottom_Post(BuildContext context, Posts post, [WidgetRef? refe]) {
+Widget Bottom_Post(BuildContext context, Posts post, [WidgetRef? ref]) {
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: 20.0),
     child: Column(
@@ -358,13 +402,23 @@ Widget Bottom_Post(BuildContext context, Posts post, [WidgetRef? refe]) {
                         iconSize: 30.0,
                         onPressed: () {
                           print('Like post');
-
-                          refe!
-                              .read(postsProvider.notifier)
-                              .addLikeOrUndo(post);
+                          final amILike = post.amILike;
+                          final numberLikes = post.numberLikes;
+                          ref!.read(postStateProvider.notifier).state =
+                              post.copyWith(
+                                  amILike: amILike == 0 ? 1 : 0,
+                                  numberLikes: amILike == 0
+                                      ? numberLikes + 1
+                                      : numberLikes - 1);
+                          final p = ref.watch(postStateProvider);
+                          ref.read(postsProvider.notifier).updatePost(p!);
                         }),
                     Text(
-                      post.numberLikes.toString(),
+                      ref!
+                          .watch(postStateProvider.notifier)
+                          .state!
+                          .numberLikes
+                          .toString(),
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: Colors.black87, fontWeight: FontWeight.w600),
                     ),

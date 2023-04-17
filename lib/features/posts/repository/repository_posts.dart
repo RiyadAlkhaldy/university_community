@@ -6,11 +6,6 @@ import 'package:untitled/features/posts/models/post_model.dart';
 
 import '../../../core/constant.dart';
 
-// final myrequest = Provider<ResponsePosts>((ref) {
-//   return MyRequest().getResponsePosts();
-
-// });
-
 final postsProvider =
     StateNotifierProvider<RepositoryPosts, List<Posts>>((ref) {
   // final myreq = ref.watch(myrequest);
@@ -23,9 +18,9 @@ final AllPostsProvider = FutureProvider<List<Posts>>((ref) async {
     return posts;
   });
   return posts;
-
-  // ignore: invalid_use_of_protected_member
 });
+
+final postStateProvider = StateProvider<Posts?>((ref) => null);
 
 class RepositoryPosts extends StateNotifier<List<Posts>> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
@@ -87,8 +82,34 @@ class RepositoryPosts extends StateNotifier<List<Posts>> {
       });
     }
     state = [...posts];
-
+    // if(debug)
     print('liked post number ${currentPost}');
   }
+
+  void updateNumberTheComments(Posts currentPost, int value) {
+    List<Posts> posts = [];
+
+    state.forEach((post) {
+      if (post.id == currentPost.id)
+        post = currentPost.copyWith(
+            numberComments: currentPost.numberComments + value);
+      posts.add(post);
+    });
+    state = [...posts];
+
+    print('update the post number ${currentPost}');
+  }
+
   // State =[...posts];
+  void updatePost(Posts currentPost) {
+    List<Posts> posts = [];
+
+    state.forEach((post) {
+      if (post.id == currentPost.id) post = currentPost;
+      posts.add(post);
+    });
+    state = [...posts];
+
+    print('update the post number ${currentPost}');
+  }
 }
