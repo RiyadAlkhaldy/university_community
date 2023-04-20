@@ -25,6 +25,13 @@ class _AdminRegisterState extends State<AdminRegister> {
                     keyboardType: TextInputType.number),
               ),
               Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFieldCustom(
+                    hintText: 'ID Number',
+                    labelText: 'ID Number',
+                    keyboardType: TextInputType.number),
+              ),
+              Padding(
                 padding: EdgeInsets.only(top: 20),
                 child: ElevatedButton(
                   onPressed: () {},

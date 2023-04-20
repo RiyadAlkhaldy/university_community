@@ -5,42 +5,32 @@ import 'package:untitled/features/posts/widgets/build_post.dart';
 
 // import '../controller/posts_controlller.dart';
 import '../models/post_model.dart';
-import '../repository/repository_posts.dart';
+import '../repository/repository_colloge_posts.dart';
+// import '../repository/repository_posts.dart';
 
-class AllPostScreen extends ConsumerStatefulWidget {
-  AllPostScreen({
+class AllCollogePostsScreen extends ConsumerStatefulWidget {
+  AllCollogePostsScreen({
     super.key,
   });
 
   @override
-  ConsumerState<AllPostScreen> createState() => _PostScreenState();
+  ConsumerState<AllCollogePostsScreen> createState() => _PostScreenState();
 }
 
-class _PostScreenState extends ConsumerState<AllPostScreen> {
-  // @override
-  // void initState() async {
-  //   // await ref.read(postsProvider.notifier).getAllPosts;
-  //   // final p = ref.read(postsProvider.notifier).state;
-  //   // print(p);
-
-  //   super.initState();
-  // }
-
+class _PostScreenState extends ConsumerState<AllCollogePostsScreen> {
   bool dataLoaded = false;
   bool inital = true;
-
   @override
   Widget build(BuildContext context) {
     // final posts =
     if (inital == true) {
-      ref.watch(postsProvider.notifier).getAllPosts.then((value) {
+      ref.watch(collogePostsProvider.notifier).getAllCollogePosts.then((value) {
         setState(() {
           dataLoaded = true;
           inital = false;
         });
       });
     }
-    // final postss = ref.watch(postsProvider);
 
     return CustomScrollView(
       slivers: [
@@ -55,13 +45,11 @@ class _PostScreenState extends ConsumerState<AllPostScreen> {
               height: 100.0,
               child: ListView(
                   scrollDirection: Axis.horizontal, children: [NewWidget()]),
-            ), //
-            // ref.watch(getAllPostsProvider).when(
-            // for(var post in postss)
+            ),
             dataLoaded == true
                 ? Column(
                     children: ref
-                        .watch(postsProvider)
+                        .watch(collogePostsProvider)
                         .map((p) => buildPost(
                               index: 0,
                               contextl: context,

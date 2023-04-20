@@ -24,10 +24,23 @@ class UploadFileScreen extends ConsumerStatefulWidget {
   ConsumerState<UploadFileScreen> createState() => _UploadFileScreenState();
 }
 
+TextEditingController contentController = TextEditingController();
+
 class _UploadFileScreenState extends ConsumerState<UploadFileScreen> {
   @override
   build(BuildContext context) {
-    final upload = ref.watch(uploadFileProvider);
+    // final upload = ref.watch(uploadFileProvider);
+    @override
+    void initState() {
+      super.initState();
+      ref.read(uploadFileProvider).path!.bytes!.clear();
+      if (contentController.text.trim().isNotEmpty) {
+        contentController.clear();
+      }
+    }
+      if (contentController.text.trim().isNotEmpty) {
+        contentController.clear();
+      }
 
     return Scaffold(
       backgroundColor: Colors.grey.withOpacity(0.8),
@@ -42,23 +55,26 @@ class _UploadFileScreenState extends ConsumerState<UploadFileScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  if (upload.getFile() != null)
+                  if (ref.watch(uploadFileProvider).getFile() != null)
                     Container(
                       height: 300,
                       child: FileType.video == widget.type
                           ? PortraitPlayerWidget(
-                              file: upload.getFile(),
+                              file: ref.watch(uploadFileProvider).getFile(),
                               type: widget.type,
                             )
-                          : Image.file(upload.getFile(), fit: BoxFit.contain),
+                          : Image.file(ref.watch(uploadFileProvider).getFile(),
+                              fit: BoxFit.contain),
                     ),
-                  InputStyle(context: context),
+                  InputStyle(context: context, controller: contentController),
                   UploadButtonWidget(
                     backgroundcolor: Colors.blue.withOpacity(0.5),
                     text: "Select a file",
                     textColor: Colors.white,
                     onTap: () async {
-                      await upload.pickFiles(type: widget.type);
+                      await ref
+                          .read(uploadFileProvider)
+                          .pickFiles(type: widget.type);
                       setState(() {});
                     },
                   ),
@@ -70,9 +86,13 @@ class _UploadFileScreenState extends ConsumerState<UploadFileScreen> {
                     text: "Upload",
                     textColor: Colors.white,
                     onTap: () async {
-                      upload.upload(
+                      await ref.read(uploadFileProvider).upload(
                           type: widget.type == FileType.image ? 2 : 3,
-                          context: context);
+                          context: context,
+                          content: contentController.text.trim().isNotEmpty
+                              ? contentController.text.trim()
+                              : '');
+                      // ref.read(uploadFileProvider).path!.bytes!.clear();
                     },
                   ),
                 ],
@@ -111,6 +131,7 @@ Widget InputUserName(
     required BuildContext context,
     TextEditingController? controller}) {
   return TextFormField(
+      controller: controller,
       style: TextStyle(color: Colors.black),
       maxLines: 5,
       minLines: 1,

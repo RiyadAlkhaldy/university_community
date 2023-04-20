@@ -1,46 +1,54 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled/features/posts/models/post_model.dart';
 
 import '../../../core/constant.dart';
 
-final postsProvider =
-    StateNotifierProvider<RepositoryPosts, List<Posts>>((ref) {
+final sectionPostsProvider =
+    StateNotifierProvider<RepositorySectionPosts, List<Posts>>((ref) {
   // final myreq = ref.watch(myrequest);
-  return RepositoryPosts();
+  return RepositorySectionPosts();
 });
-final AllPostsProvider = FutureProvider<List<Posts>>((ref) async {
+final AllSectionPostsProvider = FutureProvider<List<Posts>>((ref) async {
   List<Posts> posts = [];
-  await ref.watch(postsProvider.notifier).getAllPosts.then((value) {
-    posts = ref.watch(postsProvider.notifier).state;
+  await ref
+      .read(sectionPostsProvider.notifier)
+      .getAllSectionPosts
+      .then((value) {
+    posts = ref.watch(sectionPostsProvider.notifier).state;
     return posts;
   });
   return posts;
 });
 
-final postStateProvider = StateProvider<Posts?>((ref) => null);
+final sectionPostStateProvider = StateProvider<Posts?>((ref) => null);
 
-class RepositoryPosts extends StateNotifier<List<Posts>> {
+class RepositorySectionPosts extends StateNotifier<List<Posts>> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final dio = Dio();
 
-  RepositoryPosts() : super([]);
+  RepositorySectionPosts() : super([]);
 
   // RepositoryPosts();
-  Future<List<Posts>> get getAllPosts async {
+  Future<List<Posts>> get getAllSectionPosts async {
     final SharedPreferences prefs = await _prefs;
     final ResponsePosts responsePosts;
-
+    final Map<String, dynamic> data = {
+      'section_id': prefs.getString('section_id'),
+      'user_id': prefs.getString('id'),
+    };
     Response response;
 
     response = await dio.post(
-      '${ApiUrl}posts/get-all-posts/',
-      options: Options(headers: {
-        'authorization': 'Bearer ${prefs.getString('token')}',
-        "Accept": "application/json"
-      }),
+      '${ApiUrl}section/get-section-posts/',
+      options: Options(
+        headers: {
+          'authorization': 'Bearer ${prefs.getString('token')}',
+          "Accept": "application/json"
+        },
+      ),
+      queryParameters: data,
     );
     print('ok');
     print(response.data);

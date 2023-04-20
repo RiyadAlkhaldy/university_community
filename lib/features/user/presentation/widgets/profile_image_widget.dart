@@ -25,7 +25,10 @@ class ProfileImageWidget extends StatelessWidget {
           Positioned(
             bottom: 0,
             right: 4,
-            child: buildEditIcon(color),
+            child: InkWell(
+              child: buildEditIcon(color),
+              onTap: () => null,
+            ),
           ),
         ],
       ),
@@ -33,25 +36,29 @@ class ProfileImageWidget extends StatelessWidget {
   }
 
   Widget buildImage() {
-    // final image = NetworkImage(imagePath);
-
     return buildCircle(
         child: ClipOval(
-          // clipper: MyClipper(),
           child: Material(
             color: Colors.transparent,
-            child: CachedNetworkImage(
-              imageUrl: imagePath,
-              placeholder: (context, url) => Loader(),
-              //  Ink.image(
+            child: imagePath.isEmpty
+                ? Image.asset(
+                    'assets/images/user1.png',
+                    fit: BoxFit.cover,
+                    width: 108,
+                    height: 108,
+                  )
+                : CachedNetworkImage(
+                    imageUrl: imagePath,
+                    placeholder: (context, url) => Loader(),
+                    //  Ink.image(
 
-              // image: image,
-              fit: BoxFit.cover,
-              width: 108,
-              height: 108,
-              // child: InkWell(onTap: onClicked),
-              // ),
-            ),
+                    // image: image,
+                    fit: BoxFit.cover,
+                    width: 108,
+                    height: 108,
+                    // child: InkWell(onTap: onClicked),
+                    // ),
+                  ),
           ),
         ),
         all: 1,

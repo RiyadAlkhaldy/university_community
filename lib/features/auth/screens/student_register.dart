@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:untitled/core/utils/valiadate_inputs.dart';
-import 'package:untitled/features/auth/controller/auth_controller.dart';
 
+import '../repository/auth_repository.dart';
 import '../widgets/text_field_custom.dart';
 
 class StudentRegister extends ConsumerStatefulWidget {
@@ -29,10 +29,11 @@ class _StudentRegisterState extends ConsumerState<StudentRegister> {
       print('auth');
       isGoing = true;
 
-      ref.watch(authControllerProvider.notifier).state.register(
+      ref.watch(authProvider.notifier).state.register(
           email: emailController.text.trim(),
           uniId: univIdController.text.trim(),
           IDNumber: IDNUmber.text.trim(),
+          type: 1,
           context: context);
     }
     print('no auth');

@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:untitled/features/setting/widgets/icon_widget.dart';
 
-
-
 // Widget buildAcount() => SimpleSettingsTile(
 //       title: "Account Settings",
 //       subtitle: 'privacy, security, Languages',
@@ -38,7 +36,7 @@ Widget buildReportBug({required BuildContext context}) => SimpleSettingsTile(
         // switchList = darkMode;
       },
     );
-    Widget buildSendFeedback({required BuildContext context}) => SimpleSettingsTile(
+Widget buildSendFeedback({required BuildContext context}) => SimpleSettingsTile(
       title: "Send Feedback",
       leading: IconWidget(icon: Icons.feedback, color: Colors.purple),
       onTap: () {

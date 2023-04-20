@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:untitled/core/utils/colors.dart';
 import 'package:untitled/core/utils/utils.dart';
+import 'package:untitled/features/posts/screens/all_colloge_posts_screen.dart';
+import 'package:untitled/features/posts/screens/all_section_posts_screen.dart';
 import 'package:untitled/features/posts/screens/post_screen.dart';
 
 import '../all_post_screen.dart';
@@ -59,8 +61,8 @@ class _MobileLayoutScreenState extends ConsumerState<PostLayout>
             controller: tabBarController,
             children: [
               AllPostScreen(),
-              PostScreen(),
-              PostScreen(),
+              AllCollogePostsScreen(),
+              AllSectionPostsScreen(),
             ],
           ),
         ),
@@ -114,13 +116,13 @@ class _MobileLayoutScreenState extends ConsumerState<PostLayout>
       ),
       tabs: const [
         Tab(
-          text: 'All',
+          text: 'All Posts',
         ),
         Tab(
-          text: 'Section',
+          text: 'Colloge Posts',
         ),
         Tab(
-          text: 'Specialty',
+          text: 'Section Posts',
         ),
       ],
     );

@@ -42,7 +42,7 @@ class _RegistrationState extends State<Registration> {
                     borderRadius: BorderRadius.circular(15)),
                 child: DropdownButton(
                     // isExpanded: true,
-                    
+
                     alignment: Alignment.center,
                     icon: Icon(Icons.person),
                     borderRadius: BorderRadius.circular(10),
@@ -73,7 +73,9 @@ class _RegistrationState extends State<Registration> {
               ),
               _selectedValue == _accountType[0]
                   ? StudentRegister()
-                  : AdminRegister(),
+                  : _selectedValue == _accountType[1]
+                      ? AdminRegister()
+                      : AdminRegister(),
             ],
           ),
         ),

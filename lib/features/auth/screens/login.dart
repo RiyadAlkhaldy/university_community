@@ -2,24 +2,36 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:untitled/features/auth/Screens/registration.dart';
 
+import '../repository/auth_repository.dart';
+
 //---------------------
-class Login extends StatefulWidget {
+class Login extends ConsumerStatefulWidget {
   const Login({Key? key}) : super(key: key);
 
   static const String routeName = 'login';
 
   @override
-  State<Login> createState() => _LoginState();
+  ConsumerState<Login> createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
+GlobalKey<FormState> formState = GlobalKey();
+bool isDone = false;
+TextEditingController emailContoller = TextEditingController();
+TextEditingController passwordContoller = TextEditingController();
+// login() async {}
+
+class _LoginState extends ConsumerState<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Content(),
+      body: Form(
+          autovalidateMode: AutovalidateMode.always,
+          key: formState,
+          child: Content()),
       backgroundColor: Colors.white,
     );
   }
@@ -33,7 +45,7 @@ class _LoginState extends State<Login> {
         const SizedBox(
           height: 10,
         ),
-        LoginButton(),
+        LoginButton(ref, context),
         restPasswd(),
         LogupButton(),
       ],
@@ -104,13 +116,18 @@ Widget InputStyle(bool whatIs, context) {
         ),
       ],
     ),
-    child: (whatIs == true) ? InputUserName() : InputUserPasswd(context),
+    child: (whatIs == true)
+        ? InputUserName(emailContoller, context)
+        : InputUserPasswd(passwordContoller, context),
   );
 }
 
 //---------------UserNameField--------------
-Widget InputUserName() {
-  return const TextField(
+Widget InputUserName(TextEditingController controller, BuildContext context) {
+  return TextField(
+    style:
+        Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.black),
+    controller: controller,
     textAlign: TextAlign.right,
     decoration: InputDecoration(
       border: InputBorder.none,
@@ -127,9 +144,12 @@ Widget InputUserName() {
 }
 
 //---------------UserPassWordField--------------
-Widget InputUserPasswd(context) {
+Widget InputUserPasswd(TextEditingController controller, context) {
   bool _isObsecured = true;
   return TextFormField(
+    controller: controller,
+    style:
+        Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.black),
     textAlign: TextAlign.right,
     obscureText: true,
     decoration: InputDecoration(
@@ -160,20 +180,33 @@ Widget InputUserPasswd(context) {
 
 //---------LoginButt--------
 
-Widget LoginButton() {
-  return Container(
-    height: 40,
-    width: 250,
-    decoration: BoxDecoration(
-      color: Colors.greenAccent,
-      borderRadius: BorderRadius.circular(10.0),
-    ),
-    child: const TextButton(
-      onPressed: (null),
-      child: Text(
-        'تسجيل الدخول',
-        style: TextStyle(
-            color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+Widget LoginButton(WidgetRef ref, BuildContext context) {
+  return InkWell(
+    onTap: () async {
+      print('go to login');
+
+      final fmSt = formState.currentState;
+      if (fmSt!.validate()) {
+        print('auth');
+        ref.read(authProvider).login(
+            email: emailContoller.text.trim(),
+            password: passwordContoller.text.trim(),
+            context: context);
+      }
+    },
+    child: Container(
+      height: 40,
+      width: 250,
+      decoration: BoxDecoration(
+        color: Colors.greenAccent,
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Center(
+        child: Text(
+          'تسجيل الدخول',
+          style: TextStyle(
+              color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+        ),
       ),
     ),
   );

@@ -4,45 +4,80 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:untitled/core/error/error.dart';
 import 'package:untitled/core/utils/loader.dart';
 import 'package:untitled/features/posts/widgets/build_post.dart';
-
 import 'package:untitled/features/user/data/models/user_model.dart';
 import 'package:untitled/features/user/data/models/user_post_model.dart';
-import 'package:untitled/features/user/presentation/widgets/post_card.dart';
 import 'package:untitled/features/user/presentation/widgets/profile_image_widget.dart';
+import '../../../posts/repository/repository_posts.dart';
+import '../../../posts/screens/all_colloge_posts_screen.dart';
 
-import '../widgets/profile_content_widget.dart';
-
-class UserProfileScreen extends ConsumerWidget {
+class UserProfileScreen extends ConsumerStatefulWidget {
   const UserProfileScreen({Key? key}) : super(key: key);
   static const String routeName = 'user-profile-screen';
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<UserProfileScreen> createState() => _UserProfileScreenState();
+}
+
+class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
+  bool dataLoaded = false;
+  bool inital = true;
+  @override
+  Widget build(BuildContext context) {
+    if (inital == true) {
+      ref.watch(postsProvider.notifier).getAllPosts.then((value) {
+        setState(() {
+          dataLoaded = true;
+          inital = false;
+        });
+      });
+    }
     final listPostMode = ref.watch(listUserPostsModelFututre);
     final user = ref.watch(userStudent);
     final height = MediaQuery.of(context).size.height / 3;
     print(MediaQuery.of(context).size);
     print('height' + height.toString());
     return Scaffold(
-        body: CustomScrollView(
-      physics: const BouncingScrollPhysics(),
-      slivers: [
-        user.when(
-          data: (data) =>
-              SliverAppBarCustom(height: height, context: context, data: data),
-          error: (error, stackTrace) => Text('error'),
-          loading: () => Loader(),
-        ),
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          user.when(
+            data: (data) => SliverAppBarCustom(
+                height: height, context: context, data: data),
+            error: (error, stackTrace) => Text('error'),
+            loading: () => Loader(),
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate([
+              // PostHeader(),
+              Container(
+                width: double.infinity,
+                height: 100.0,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [NewWidget()],
+                ),
+              ), //
 
-        // ProfilePostContent(),
-        // ProfilePostContent(),
-        // ProfilePostContent(),
-        // ProfilePostContent(),
-        // ProfilePostContent(),
-        // ProfilePostContent(),
-        SliverListt(listPostMode: listPostMode),
-      ],
-    ));
+              dataLoaded == true
+                  ? Column(
+                      children: ref
+                          .watch(postsProvider)
+                          .map((p) => buildPost(
+                                index: 0,
+                                contextl: context,
+                                post: p,
+                              ))
+                          .toList()
+
+                      // childCount: data.length,
+                      )
+                  : Loader(),
+              // postss.when
+            ]),
+          )
+        ],
+      ),
+    );
   }
 }
 
@@ -62,7 +97,7 @@ class SliverListt extends StatelessWidget {
           return SliverChildBuilderDelegate(
             (context, index) {
               return index % 2 == 0
-                  ? buildPost(index:1, contextl: context)
+                  ? buildPost(index: 1, contextl: context)
                   :
                   // height: 100,
 
@@ -209,7 +244,7 @@ Widget SliverAppBarCustom(
             Positioned(
               bottom: -10,
               child:
-                  ProfileImageWidget(imagePath: data.image, onClicked: () {}),
+                  ProfileImageWidget(imagePath: imageUrl, onClicked: () {}),
             ),
           ]),
       centerTitle: true,

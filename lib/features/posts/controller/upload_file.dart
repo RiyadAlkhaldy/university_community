@@ -10,7 +10,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final uploadFileProvider = Provider.autoDispose<UploadFileReposetitory>((ref) {
+import '../../../core/constant.dart';
+
+final uploadFileProvider =
+    StateProvider.autoDispose<UploadFileReposetitory>((ref) {
   return UploadFileReposetitory();
 });
 // final textPostProfider = FutureProvider((ref) async {
@@ -27,17 +30,20 @@ class UploadFileReposetitory {
   final Future<SharedPreferences> _prefs =
       SharedPreferences.getInstance(); // final
 //this for upload file
-  List<PlatformFile>? paths;
+  // List<PlatformFile>? paths;
+  PlatformFile? path;
   String? _extension;
   double progress = 0.0;
   String link = '';
-  var file;
+  // var file;
 
   getFile() {
-    if (paths != null) {
-      file = paths!.first;
-      final p = file!.path.toString();
-      file = File(p);
+    if (path != null) {
+      var _file = path;
+
+      final p = _file!.path;
+      final file = File(p.toString());
+      print('this is the file $file');
       return file;
     }
     return null;
@@ -46,17 +52,18 @@ class UploadFileReposetitory {
   pickFiles({required FileType type}) async {
     // FilePicker.platform.pickFiles()
     try {
-      paths = (await FilePicker.platform.pickFiles(
+      path = (await FilePicker.platform.pickFiles(
         withReadStream: true,
         type: type,
         allowMultiple: false,
         onFileLoading: (FilePickerStatus status) =>
             print('file status $status'),
-        allowedExtensions: (_extension!.isNotEmpty ?? false)
+        allowedExtensions: (_extension?.isNotEmpty ?? false)
             ? _extension?.replaceAll(' ', '').split(',')
             : null,
       ))
-          ?.files;
+          ?.files
+          .single;
       if (kDebugMode) {
         // file = paths![0];
       }
@@ -69,7 +76,7 @@ class UploadFileReposetitory {
         print(e.toString());
       }
     }
-    return paths;
+    return path;
   }
 
   Future upload(
@@ -77,15 +84,14 @@ class UploadFileReposetitory {
       String? content,
       int? type,
       BuildContext? context}) async {
-    if (paths != null) {
+    if (path != null) {
       final prefs = await _prefs;
 
-      var path = paths![0].path!;
-      if (kDebugMode) print('path $path');
-      String fileName = path.split('/').last;
+      var _path = path!.path;
+      if (kDebugMode) print('path $_path');
+      String fileName = _path!.split('/').last;
       if (kDebugMode) print('fileName $fileName');
-      String url =
-          'http://10.0.2.2:8000/api/v1/file_upload'; // change it with your api url
+      String url = '${ApiUrl}v1/file_upload'; // change it with your api url
       ChunkedUploader chunkedUploader = ChunkedUploader(
         Dio(
           BaseOptions(
@@ -110,14 +116,16 @@ class UploadFileReposetitory {
         Response? response = await chunkedUploader.upload(
           fileKey: "file",
           method: "POST",
-          fileName: path,
-          maxChunkSize: 500000000,
+          fileName: _path,
+          maxChunkSize: 50000000,
           path: url,
-          fileSize: paths!.first.size,
-          fileDataStream: paths!.single.readStream!,
+          fileSize: path!.size,
+          // fileDataStream: paths!.single.readStream!,
+          fileDataStream: path!.readStream!,
           data: data,
-          onUploadProgress: onUploadProgress,
+          // onUploadProgress: onUploadProgress,
         );
+        // path!.bytes!.clear();
         Navigator.pop(context!);
         if (kDebugMode) {
           print(response);

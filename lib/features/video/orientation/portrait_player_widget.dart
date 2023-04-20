@@ -33,11 +33,17 @@ class _PortraitPlayerWidgetState extends State<PortraitPlayerWidget> {
   void initState() {
     super.initState();
 
-   
-    controller =   VideoPlayerController.network(widget.post!.url!)
-      ..addListener(() => setState(() {}))
-      ..setLooping(true)
-      ..initialize().then((_) => controller.pause());
+    if (widget.file != null) {
+      controller = VideoPlayerController.file(widget.file!)
+        ..addListener(() => setState(() {}))
+        ..setLooping(true)
+        ..initialize().then((_) => controller.pause());
+    } else {
+      controller = VideoPlayerController.network(widget.post!.url!)
+        ..addListener(() => setState(() {}))
+        ..setLooping(true)
+        ..initialize().then((_) => controller.pause());
+    }
   }
 
   @override

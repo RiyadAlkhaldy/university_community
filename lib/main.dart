@@ -11,12 +11,12 @@ import 'package:untitled/route.dart';
 import 'package:untitled/themes.dart';
 
 import 'features/auth/Screens/launch.dart';
-import 'features/auth/controller/auth_controller.dart';
+import 'features/auth/repository/auth_repository.dart';
 
 // 563492ad6f917000010000013d24e4038ca942559b31b58c298d1c40
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  AwesomeNotifications().initialize(
+ await AwesomeNotifications().initialize(
       null,
       [
         NotificationChannel(
@@ -24,6 +24,8 @@ void main() async {
             channelKey: 'basic_channel',
             channelName: 'Basic notifications',
             channelDescription: 'Notification channel for basic tests',
+            playSound: true,
+            channelShowBadge: true,
             defaultColor: Color(0xFF9D50DD),
             ledColor: Colors.white)
       ],
@@ -37,7 +39,7 @@ void main() async {
   //   debug: true,
   // );
   await Settings.init(cacheProvider: SharePreferenceCache());
-  final auth = AuthController();
+  // final auth = AuthRepository();
   // auth.websok();
   print('hi');
   runApp(ProviderScope(child: MyApp()));
@@ -49,19 +51,21 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
 }
-
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+ @override
+  void initState() async {
+    await AwesomeNotifications()
+        .isNotificationAllowed()
+        .then((isAllowed) async {
       if (!isAllowed) {
-        AwesomeNotifications().requestPermissionToSendNotifications();
+        await AwesomeNotifications().requestPermissionToSendNotifications();
       }
     });
     // TODO: implement initState
-    super.initState();
+    // super.initState();
   }
 
+class _MyAppState extends State<MyApp> {
+ 
   final isDarkModes = Settings.getValue<bool>(HeaderSettingScreen.keyDarkMode,
       defaultValue: true);
 
