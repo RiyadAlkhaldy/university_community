@@ -6,6 +6,7 @@ import 'package:untitled/core/utils/valiadate_inputs.dart';
 
 import '../repository/auth_repository.dart';
 import '../widgets/text_field_custom.dart';
+import 'login.dart';
 
 class StudentRegister extends ConsumerStatefulWidget {
   const StudentRegister({Key? key}) : super(key: key);
@@ -29,7 +30,7 @@ class _StudentRegisterState extends ConsumerState<StudentRegister> {
       print('auth');
       isGoing = true;
 
-      ref.watch(authProvider.notifier).state.register(
+      ref.watch(authProvider.notifier).state.registerStudent(
           email: emailController.text.trim(),
           uniId: univIdController.text.trim(),
           IDNumber: IDNUmber.text.trim(),
@@ -72,16 +73,17 @@ class _StudentRegisterState extends ConsumerState<StudentRegister> {
               keyboardType: TextInputType.number,
             ),
             Container(
-              // padding: EdgeInsets.symmetric(vertical: 8),
+              padding: EdgeInsets.only(top: 20),
               margin: EdgeInsets.symmetric(horizontal: 8),
-              decoration: BoxDecoration(color: Colors.blue),
               child: !isGoing
-                  ? ElevatedButton(
-                      onPressed: () {
-                        register();
-                        setState(() {});
-                      },
-                      child: Text('التالي'))
+                  ? RegisterOrLoginButton(
+                      text: 'تسجيل',
+                      context: context,
+                      onTap: () {
+                        setState(() {
+                          register();
+                        });
+                      })
                   : Container(
                       // decoration: BoxDecoration(color: Colors.black54),
                       // padding: EdgeInsets.symmetric(horizontal: 8),

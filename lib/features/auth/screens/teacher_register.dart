@@ -8,14 +8,14 @@ import '../repository/auth_repository.dart';
 import '../widgets/text_field_custom.dart';
 import 'login.dart';
 
-class AdminRegister extends ConsumerStatefulWidget {
-  const AdminRegister({super.key});
+class TeacherRegister extends ConsumerStatefulWidget {
+  const TeacherRegister({super.key});
 
   @override
-  ConsumerState<AdminRegister> createState() => _AdminRegisterState();
+  ConsumerState<TeacherRegister> createState() => _AdminRegisterState();
 }
 
-class _AdminRegisterState extends ConsumerState<AdminRegister> {
+class _AdminRegisterState extends ConsumerState<TeacherRegister> {
   GlobalKey<FormState> formState = GlobalKey();
   bool isDone = false;
   TextEditingController emailController = TextEditingController();
@@ -23,29 +23,26 @@ class _AdminRegisterState extends ConsumerState<AdminRegister> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController IDNUmber = TextEditingController();
   bool isGoing = false;
-  register(context) async {
-    setState(() {});
-
+  register(_) async {
     final fmSt = formState.currentState;
     if (!fmSt!.validate()) {
       print('auth');
       isGoing = true;
 
-      await ref.watch(authProvider.notifier).state.registerAsAdmin(
+      await ref.read(authProvider.notifier).state.registerTeacher(
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
           name: nameController.text.trim(),
           IDNumber: IDNUmber.text.trim(),
           collogeId: _selectedVal.toString(),
-          type: 3,
-          context: context);
-           Navigator.pushNamedAndRemoveUntil(
-          context,
-          MobileLayoutScreen.routeName,
-          (route) => true,
-        );
+          type: 2,
+          context: _);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        MobileLayoutScreen.routeName,
+        (route) => true,
+      );
     }
-  
     print('no auth');
     isGoing = false;
 

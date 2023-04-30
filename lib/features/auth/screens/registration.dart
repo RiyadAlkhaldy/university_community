@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:untitled/features/auth/Screens/student_register.dart';
 
 import 'admin_register.dart';
+import 'login.dart';
+import 'teacher_register.dart';
 
 class Registration extends StatefulWidget {
   const Registration({Key? key}) : super(key: key);
@@ -74,8 +76,14 @@ class _RegistrationState extends State<Registration> {
               _selectedValue == _accountType[0]
                   ? StudentRegister()
                   : _selectedValue == _accountType[1]
-                      ? AdminRegister()
+                      ? TeacherRegister()
                       : AdminRegister(),
+              CustomButton(
+                text: 'تسجيل الدخول',
+                onPressed: () {
+                  Navigator.of(context).pushReplacementNamed(Login.routeName);
+                },
+              ),
             ],
           ),
         ),

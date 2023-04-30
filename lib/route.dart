@@ -6,6 +6,7 @@ import 'package:untitled/features/auth/screens/login.dart';
 import 'package:untitled/features/posts/screens/upload_file_screen.dart';
 import 'package:untitled/features/posts/screens/upload_text_screen%20copy.dart';
 import 'package:untitled/features/user/presentation/pages/user_profile_screen.dart';
+import 'package:untitled/main.dart';
 import 'package:untitled/mobile_layout_screen.dart';
 
 import 'features/auth/Screens/registration.dart';
@@ -31,6 +32,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case MobileLayoutScreen.routeName:
       return MaterialPageRoute(
         builder: (context) => MobileLayoutScreen(),
+        
       );
     case UploadFileScreen.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;
@@ -41,6 +43,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case UploadTextScreen.routeName:
       return MaterialPageRoute(
         builder: (context) => UploadTextScreen(),
+      );
+    case MyApp.routeName:
+      return MaterialPageRoute(
+        builder: (context) => MyApp(),
       );
     // case MobileChatScreen.routeName:
     //   final arguments = settings.arguments as Map<String, dynamic>;

@@ -10,30 +10,25 @@ import 'features/video/orientation/portrait_landscape_player_page.dart';
 class MobileLayoutScreen extends StatefulWidget {
   static const String routeName = 'moile-layout-screen';
 
-   MobileLayoutScreen({super.key});
+  MobileLayoutScreen({super.key});
 
   @override
   _MobileLayoutScreenState createState() => _MobileLayoutScreenState();
 }
 
-int currentIndex = 0;
+int currentIndex = 4;
 
 class _MobileLayoutScreenState extends State<MobileLayoutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: currentIndex == 0
-          ? PostLayout()
+          ? SettingScreen()
           : currentIndex == 1
-              ? PortraitLandscapePlayerPage(
-                  index: 1,
-                  post: null,
-                )
+              ? PostLayout()
               : currentIndex == 3
                   ? SettingScreen()
-                  : UploadFileScreen(
-                      type: FileType.any,
-                    ),
+                  : PostLayout(),
       // : MyAppp(),
       bottomNavigationBar: BottomNavigationBarr(
         onTap: (value) {

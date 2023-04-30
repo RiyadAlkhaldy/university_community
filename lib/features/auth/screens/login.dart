@@ -45,9 +45,29 @@ class _LoginState extends ConsumerState<Login> {
         const SizedBox(
           height: 10,
         ),
-        LoginButton(ref, context),
+        RegisterOrLoginButton(
+        text:'تسجيل الدخول',
+          context: context,
+          onTap: () async {
+            print('go to login');
+
+            final fmSt = formState.currentState;
+            if (fmSt!.validate()) {
+              print('auth');
+              ref.read(authProvider).login(
+                  email: emailContoller.text.trim(),
+                  password: passwordContoller.text.trim(),
+                  context: context);
+            }
+          },
+        ),
         restPasswd(),
-        LogupButton(),
+        CustomButton(
+          text: 'إنشاء حساب',
+          onPressed: () {
+            Navigator.of(context).pushReplacementNamed(Registration.routeName);
+          },
+        ),
       ],
     );
   }
@@ -180,20 +200,12 @@ Widget InputUserPasswd(TextEditingController controller, context) {
 
 //---------LoginButt--------
 
-Widget LoginButton(WidgetRef ref, BuildContext context) {
+Widget RegisterOrLoginButton(
+    { required String text,
+    required BuildContext context,
+    void Function()? onTap}) {
   return InkWell(
-    onTap: () async {
-      print('go to login');
-
-      final fmSt = formState.currentState;
-      if (fmSt!.validate()) {
-        print('auth');
-        ref.read(authProvider).login(
-            email: emailContoller.text.trim(),
-            password: passwordContoller.text.trim(),
-            context: context);
-      }
-    },
+    onTap: onTap,
     child: Container(
       height: 40,
       width: 250,
@@ -203,7 +215,7 @@ Widget LoginButton(WidgetRef ref, BuildContext context) {
       ),
       child: Center(
         child: Text(
-          'تسجيل الدخول',
+          text,
           style: TextStyle(
               color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
         ),
@@ -213,7 +225,8 @@ Widget LoginButton(WidgetRef ref, BuildContext context) {
 }
 
 //---------SignupButton-------
-Widget LogupButton() {
+Widget CustomButton(
+    {required String text, required void Function()? onPressed}) {
   return KeyboardVisibilityBuilder(builder: (context, isKeyboardVisible) {
     return Visibility(
       visible: !isKeyboardVisible,
@@ -234,12 +247,9 @@ Widget LogupButton() {
               borderRadius: BorderRadius.circular(10.0),
             ),
             child: TextButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .pushReplacementNamed(Registration.routeName);
-              },
+              onPressed: onPressed,
               child: Text(
-                'إنشاء حساب',
+                text,
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 15,

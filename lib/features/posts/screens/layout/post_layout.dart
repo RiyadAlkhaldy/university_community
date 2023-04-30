@@ -2,12 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:untitled/core/enums/user_enum.dart';
 import 'package:untitled/core/utils/colors.dart';
 import 'package:untitled/core/utils/utils.dart';
 import 'package:untitled/features/posts/screens/all_colloge_posts_screen.dart';
 import 'package:untitled/features/posts/screens/all_section_posts_screen.dart';
-import 'package:untitled/features/posts/screens/post_screen.dart';
 
+import '../../../auth/repository/auth_repository.dart';
+import '../../../auth/repository/laravel_echo.dart';
 import '../all_post_screen.dart';
 
 class PostLayout extends ConsumerStatefulWidget {
@@ -34,8 +36,65 @@ class _MobileLayoutScreenState extends ConsumerState<PostLayout>
     WidgetsBinding.instance.removeObserver(this);
   }
 
+  // MyWebsocketAndPusher echo = MyWebsocketAndPusher();
+
+  void testEcho() async {
+    // final channel = WebSocketChannel.connect(
+    //   Uri.parse('ws://10.0.2.2/api/broadcasting/auth'),
+    // );
+    // // channel.stream.asBroadcastStream()
+    // channel.stream.listen((event) {
+    //   print('hellllllllllllllllllllllllllllllllllll $event');
+    // });
+    // await ref.watch(getUserProvider).then((value) async {
+    //   print(value[UserEnum.name.type]);
+    //   await LaravelEcho.init(token: '${value[UserEnum.token.type]}');
+    //   // LaravelEcho.instance.disconnect();
+    // });
+    // LaravelEcho.instance.connect();
+    // LaravelEcho.instance.e ;
+
+    // await LaravelEcho.instance
+    //     .channel('post.notification')
+    //     .listen('RealtimePosts', (e) async {
+    //   print(
+    //       'I listen to hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh ${e.toString()}');
+    // });
+    // var x =LaravelEcho.pusherEvent(channelName: '.post.added', eventName: 'RealtimePosts');
+
+    // .subscribed((callback) {
+    //   print('hellllllllllllllllllllllllllllllllllll $callback');
+    // });
+    // LaravelEcho.instance.broadcaster
+
+    // await LaravelEcho.instance.channel('.post.added').listen("RealtimePosts",
+    //     (callback) {
+    //   print('hellllllllllllllllllllllllllllllllllll $callback');
+    // });
+
+    // LaravelEcho.instance.channel('.post.added').listenForWhisper(
+    //     'RealtimePosts',
+    //     (e) => {
+    //           Println(
+    //               'hellllllllllllllllllllllllllllllllllllhellllllllllllllllllllllllllllllllllll${e.toString()}')
+    //         });
+    //   try {
+    //     // await  echo.options;
+    //     await echo.pusher;
+    //     // echo.connect;
+    //     echo.onConnectionStateChange;
+    //     echo.onConnectionError;
+    //     await echo.bind;
+
+    //     echo.channel;
+    //   } catch (e) {
+    //     print(e);
+    //   }
+  }
+
   @override
   Widget build(BuildContext context) {
+    testEcho();
     return DefaultTabController(
       length: 3,
       child: Scaffold(

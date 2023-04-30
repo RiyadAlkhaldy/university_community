@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled/features/posts/models/post_model.dart';
 
 import '../../../core/constant.dart';
+import '../../../core/enums/user_enum.dart';
 
 final postsProvider =
     StateNotifierProvider<RepositoryPosts, List<Posts>>((ref) {
@@ -34,11 +34,11 @@ class RepositoryPosts extends StateNotifier<List<Posts>> {
     final ResponsePosts responsePosts;
 
     Response response;
-
+    print(prefs.getString('token'));
     response = await dio.post(
       '${ApiUrl}posts/get-all-posts/',
       options: Options(headers: {
-        'authorization': 'Bearer ${prefs.getString('token')}',
+        'authorization': 'Bearer ${prefs.getString(UserEnum.token.type)}',
         "Accept": "application/json"
       }),
     );

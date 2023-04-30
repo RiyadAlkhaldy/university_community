@@ -10,13 +10,14 @@ import 'package:untitled/route.dart';
 // import 'package:untitled/features/user/presentation/pages/user_profile_screen.dart';
 import 'package:untitled/themes.dart';
 
+import 'core/enums/user_enum.dart';
 import 'features/auth/Screens/launch.dart';
 import 'features/auth/repository/auth_repository.dart';
 
 // 563492ad6f917000010000013d24e4038ca942559b31b58c298d1c40
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
- await AwesomeNotifications().initialize(
+  await AwesomeNotifications().initialize(
       null,
       [
         NotificationChannel(
@@ -46,26 +47,25 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
+  static const String routeName = 'my-app';
   MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
- @override
-  void initState() async {
-    await AwesomeNotifications()
-        .isNotificationAllowed()
-        .then((isAllowed) async {
-      if (!isAllowed) {
-        await AwesomeNotifications().requestPermissionToSendNotifications();
-      }
-    });
-    // TODO: implement initState
-    // super.initState();
-  }
+
+@override
+void initState() async {
+  await AwesomeNotifications().isNotificationAllowed().then((isAllowed) async {
+    if (!isAllowed) {
+      await AwesomeNotifications().requestPermissionToSendNotifications();
+    }
+  });
+  // TODO: implement initState
+  // super.initState();
+}
 
 class _MyAppState extends State<MyApp> {
- 
   final isDarkModes = Settings.getValue<bool>(HeaderSettingScreen.keyDarkMode,
       defaultValue: true);
 
@@ -83,6 +83,10 @@ class _MyAppState extends State<MyApp> {
           //!this for clear all dara in SharedPreferences .
           // value.clear();
           token = value.getString('token');
+          print(UserEnum.token.type);
+          print(token);
+          print('tttttttttttttttt ${value.getString(UserEnum.name.type)}');
+          print('tttttttttttttttt ${value.getString(UserEnum.email.type)}');
           initial = false;
         });
       });

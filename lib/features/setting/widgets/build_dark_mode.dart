@@ -15,13 +15,7 @@ import 'package:untitled/features/setting/widgets/icon_widget.dart';
 //         // switchList = darkMode;
 //       },
 //     );
-Widget buildLogout() => SimpleSettingsTile(
-      title: "Logout",
-      leading: IconWidget(icon: Icons.logout, color: Color(0xFF642ef3)),
-      onTap: () {
-        // switchList = darkMode;
-      },
-    );
+
 Widget buildDeleteAccount() => SimpleSettingsTile(
       title: "Delete Account",
       leading: IconWidget(icon: Icons.delete, color: Colors.pink),
